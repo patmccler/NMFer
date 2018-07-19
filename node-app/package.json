@@ -1,0 +1,22 @@
+{
+  "name": "nmf-builder",
+  "version": "1.0.0",
+  "description": "Displays and generates presentations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patmccler/NMFer.git"
+  },
+  "author": "andrew-k9",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patmccler/NMFer/issues"
+  },
+  "homepage": "https://github.com/patmccler/NMFer#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
