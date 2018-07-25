@@ -7,7 +7,7 @@ const fs = require('fs');
 //    fetchManifest  : returns the JSON of the manifest for the NMF
 //
 //    (params)    : path to the manifest.json file
-//    (returns)   : manifest in the folder
+//    (returns)   : manifest in the folder or string
 var fetchManifest = (path) => {
   let manifest;
 
@@ -15,7 +15,7 @@ var fetchManifest = (path) => {
      process.chdir(`./${path}`);
      manifest = JSON.parse(fs.readFileSync('manifest.json'));
   }else{
-    console.log('none');
+    return 'Bad Path';
   }
 
   process.chdir('../');
@@ -25,8 +25,8 @@ var fetchManifest = (path) => {
 
 /////////////////////////////////////////////////////////////////////
 //
-//    Contains    : async function that returns an array
-//                  of strings for files
+//    Contains    : async function that returns an array of strings 
+//                  for files
 //
 //    (params)    : path     - the filepath of the folder
 //
