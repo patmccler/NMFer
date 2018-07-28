@@ -57,7 +57,8 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedSlide: props.slides[0]
+      selectedSlide: props.slides[props.initialSlide],
+      selectedSlideIndex: props.initialSlide
     };
   }
   render() {
@@ -74,16 +75,31 @@ class Main extends Component {
           onClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
         />
-        <SlideViewer slide={this.state.selectedSlide} />
+        <SlideViewer
+          onClick={i => this.handleOverviewClick(i)}
+          slideNumber={this.state.selectedSlideIndex + 1}
+          slide={this.state.selectedSlide}
+        />
       </div>
     );
   }
 
   handleOverviewClick(i) {
+    if (i >= this.props.slides.length || i < 0) {
+      return;
+    }
+
     // let slides = this.state.slides;
-    this.setState({ selectedSlide: this.props.slides[i] });
+    this.setState({
+      selectedSlide: this.props.slides[i],
+      selectedSlideIndex: i
+    });
   }
 }
+
+Main.defaultProps = {
+  initialSlide: 0
+};
 
 const SlideViewer = props => {
   let slide = props.slide;
@@ -97,8 +113,12 @@ const SlideViewer = props => {
         justifyContent: "space-between"
       }}
     >
-      <ImageView image={slide.content_file_name} />
-      <SlideDetail slide={slide} />
+      <ImageView
+        slideNumber={props.slideNumber}
+        onClick={props.onClick}
+        image={slide.content_file_name}
+      />
+      <SlideDetail slideNumber={props.slideNumber} slide={slide} />
     </div>
   );
 };
@@ -110,7 +130,8 @@ const SlideDetail = props => {
     for (let prop in props.slide) {
       slideDetailsToDisplay.push(
         <li key={prop} style={{ textAlign: "left" }}>
-          {prop + ": " + props.slide[prop]}
+          <label>{prop}</label>
+          <input type="text" value={": " + JSON.stringify(props.slide[prop])} />
         </li>
       );
     }
@@ -119,7 +140,7 @@ const SlideDetail = props => {
   }
   return (
     <div style={{ flexBasis: "15%" }}>
-      <h3>Slide Details</h3> <br />
+      <h3>Slide Details for slide {props.slideNumber}</h3> <br />
       <ul>{slideDetailsToDisplay}</ul>
     </div>
   );
@@ -138,9 +159,19 @@ const ImageView = props => {
       }}
       className="image-viewer"
     >
-      <button style={{ flexBasis: "5%" }}>{"<"}</button>
+      <button
+        onClick={() => props.onClick(props.slideNumber - 2)}
+        style={{ flexBasis: "5%" }}
+      >
+        {"<"}
+      </button>
       <img style={{ flexBasis: "90%" }} src={props.image} />
-      <button style={{ flexBasis: "5%" }}>></button>
+      <button
+        onClick={() => props.onClick(props.slideNumber)}
+        style={{ flexBasis: "5%" }}
+      >
+        >
+      </button>
     </div>
   );
 };
