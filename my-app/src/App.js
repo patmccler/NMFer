@@ -13,6 +13,10 @@ const dummySlides = [
   {
     slideType: "image",
     content_file_name: "https://imgs.xkcd.com/comics/good_code.png"
+  },
+  {
+    slideType: "image",
+    content_file_name: "https://imgs.xkcd.com/comics/password_strength.png"
   }
 ];
 
@@ -130,8 +134,8 @@ const SlideDetail = props => {
     for (let prop in props.slide) {
       slideDetailsToDisplay.push(
         <li key={prop} style={{ textAlign: "left" }}>
-          <label>{prop}</label>
-          <input type="text" value={": " + JSON.stringify(props.slide[prop])} />
+          <label>{prop + ": "}</label>
+          <input type="text" value={JSON.stringify(props.slide[prop])} />
         </li>
       );
     }
