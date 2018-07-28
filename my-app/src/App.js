@@ -37,16 +37,29 @@ var getFile = function getFile() {
 };
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      slides: dummySlides
+    };
+  }
+
   render() {
     return (
       <div className="App">
-        <Main />
+        <Main slides={this.state.slides} />
       </div>
     );
   }
 }
 
 class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedSlide: props.slides[0]
+    };
+  }
   render() {
     return (
       <div
@@ -57,10 +70,18 @@ class Main extends Component {
           display: "flex"
         }}
       >
-        <OverviewSection slides={dummySlides} />
-        <SlideViewer slide={dummySlides[0]} />
+        <OverviewSection
+          onClick={i => this.handleOverviewClick(i)}
+          slides={this.props.slides}
+        />
+        <SlideViewer slide={this.state.selectedSlide} />
       </div>
     );
+  }
+
+  handleOverviewClick(i) {
+    // let slides = this.state.slides;
+    this.setState({ selectedSlide: this.props.slides[i] });
   }
 }
 
@@ -129,15 +150,16 @@ const OverviewSection = props => {
   if (props.slides) {
     props.slides.map((slide, index) => {
       slidesToDisplay.push(
-        <img
-          style={{ width: "100%", height: 120, paddingBottom: 3 }}
-          src={slide.content_file_name}
+        <SlideThumb
+          index={index}
+          slide={slide}
+          onClick={() => props.onClick(index)}
           key={index}
         />
       );
     });
   } else {
-    slidesToDisplay = [<span>NO SLIDES FOUND</span>];
+    slidesToDisplay = [<span key="default">NO SLIDES FOUND</span>];
   }
 
   return (
@@ -156,6 +178,16 @@ const OverviewSection = props => {
     >
       {slidesToDisplay.map((slide, i) => slide)}
     </div>
+  );
+};
+
+const SlideThumb = props => {
+  return (
+    <img
+      onClick={props.onClick}
+      style={{ width: "100%", height: 120, paddingBottom: 3 }}
+      src={props.slide.content_file_name}
+    />
   );
 };
 
