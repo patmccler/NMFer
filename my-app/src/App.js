@@ -87,7 +87,6 @@ const SlideDetail = props => {
 
   if (props.slide) {
     for (let prop in props.slide) {
-      console.log(prop);
       slideDetailsToDisplay.push(
         <li key={prop} style={{ textAlign: "left" }}>
           {prop + ": " + props.slide[prop]}
@@ -97,7 +96,6 @@ const SlideDetail = props => {
   } else {
     slideDetailsToDisplay = [<li>No Slide Info </li>];
   }
-  console.log(slideDetailsToDisplay);
   return (
     <div style={{ flexBasis: "15%" }}>
       <h3>Slide Details</h3> <br />
