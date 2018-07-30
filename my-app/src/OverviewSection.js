@@ -18,19 +18,7 @@ const OverviewSection = props => {
   }
 
   return (
-    <div
-      style={{
-        borderWidth: 2,
-        borderColor: "darkgrey",
-        borderStyle: "solid",
-        padding: 3,
-        flexBasis: "20%",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "blue"
-      }}
-      className="overview-section"
-    >
+    <div className="overview-section">
       {slidesToDisplay.map((slide, i) => slide)}
     </div>
   );
@@ -40,7 +28,7 @@ const SlideThumb = props => {
   return (
     <img
       onClick={props.onClick}
-      style={{ width: "100%", height: 120, paddingBottom: 3 }}
+      className="overview-slide-thumb"
       src={props.slide.content_file_name}
     />
   );

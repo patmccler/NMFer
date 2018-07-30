@@ -34,3 +34,58 @@
 body * {
   box-sizing: border-box;
 }
+
+.main {
+  height: 750px;
+  width: 1000px;
+  display: flex;
+}
+
+/* Image Viewer---------------------------------------*/
+
+.slide-viewer {
+  display: flex;
+  flex-direction: column;
+  border: solid 2px darkgrey;
+  flex-basis: 80%;
+  justify-content: space-between;
+}
+
+.image-viewer {
+  border-width: 2px;
+  border-color: solid;
+  border-style: darkgrey;
+  display: flex;
+  flex-basis: 75%;
+  padding: 20 0;
+}
+
+.image-viewer-side-button {
+  flex-basis: 5%;
+}
+.slide-detail-container {
+  flex-basis: "15%";
+}
+
+.slide-detail-item {
+  text-align: left;
+}
+
+/* Overview Section---------------------------------------*/
+
+.overview-section {
+  border-width: 2px;
+  border-color: darkgrey;
+  border-style: solid;
+  padding: 3px;
+  flex-basis: 20%;
+  display: flex;
+  flex-direction: column;
+  background-color: blue;
+}
+
+.overview-slide-thumb {
+  width: 100%;
+  height: 120px;
+  padding-bottom: 3px;
+}

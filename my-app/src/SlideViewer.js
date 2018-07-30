@@ -3,15 +3,7 @@ import React, { Component } from "react";
 const SlideViewer = props => {
   let slide = props.slide;
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        border: "solid 2px darkgrey",
-        flexBasis: "80%",
-        justifyContent: "space-between"
-      }}
-    >
+    <div className="slide-viewer">
       <ImageView
         slideNumber={props.slideNumber}
         onClick={props.onClick}
@@ -28,7 +20,7 @@ const SlideDetail = props => {
   if (props.slide) {
     for (let prop in props.slide) {
       slideDetailsToDisplay.push(
-        <li key={prop} style={{ textAlign: "left" }}>
+        <li key={prop} className="slide-detail-item">
           <label>{prop + ": "}</label>
           <input
             readOnly
@@ -42,7 +34,7 @@ const SlideDetail = props => {
     slideDetailsToDisplay = [<li>No Slide Info </li>];
   }
   return (
-    <div style={{ flexBasis: "15%" }}>
+    <div className="slide-viewer-detail">
       <h3>Slide Details for slide {props.slideNumber}</h3> <br />
       <ul>{slideDetailsToDisplay}</ul>
     </div>
@@ -51,29 +43,19 @@ const SlideDetail = props => {
 
 const ImageView = props => {
   return (
-    <div
-      style={{
-        borderWidth: 2,
-        borderColor: "solid",
-        borderStyle: "darkgrey",
-        display: "flex",
-        flexBasis: "75%",
-        padding: "20 0"
-      }}
-      className="image-viewer"
-    >
+    <div className="image-viewer">
       <button
         onClick={() => props.onClick(props.slideNumber - 2)}
-        style={{ flexBasis: "5%" }}
+        className="image-viewer-side-button"
       >
         {"<"}
       </button>
       <img style={{ flexBasis: "90%" }} src={props.image} />
       <button
         onClick={() => props.onClick(props.slideNumber)}
-        style={{ flexBasis: "5%" }}
+        className="image-viewer-side-button"
       >
-        >
+        {">"}
       </button>
     </div>
   );

@@ -55,14 +55,7 @@ class Main extends Component {
   }
   render() {
     return (
-      <div
-        className="Main"
-        style={{
-          height: 750,
-          width: 1000,
-          display: "flex"
-        }}
-      >
+      <div className="main">
         <OverviewSection
           onClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
