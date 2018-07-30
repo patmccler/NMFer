@@ -59,6 +59,7 @@ class Main extends Component {
         <OverviewSection
           onClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
+          selectedSlide={this.state.selectedSlideIndex}
         />
         <SlideViewer
           onClick={i => this.handleOverviewClick(i)}

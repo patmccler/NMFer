@@ -89,3 +89,12 @@ body * {
   height: 120px;
   padding-bottom: 3px;
 }
+
+.overview-slide-thumb-highlight {
+  box-sizing: content-box;
+  border-color: red;
+  border-width: 3px;
+  border-style: solid;
+  margin: -3px 0 0px -3px;
+  padding: 0;
+}
