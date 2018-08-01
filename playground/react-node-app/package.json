@@ -1,0 +1,11 @@
+{
+  "name": "react-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "PORT=3001 node bin/www"
+  },
+  "dependencies": {
+    "express": "~4.16.0"
+  }
+}

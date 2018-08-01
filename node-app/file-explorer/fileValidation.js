@@ -44,19 +44,17 @@ let checkUnused = (slides, fileNames) => new Promise( (resolve, reject) =>{
       unusedFiles: [], 
       fileNotFound: []
     };
-    var array = [];
 
     for(let i = 0; i < slides.length; ++i){
       let temp = getSlideContent(slides[i]);
       if(fileNames.includes(temp)){
         fileNames.splice(fileNames.indexOf(temp), 1);
       } else {
-        array.push(temp);
+        obj.fileNotFound.push(temp);
       }
     }
 
     obj.unusedFiles = fileNames;
-    obj.fileNotFound = array;
 
     resolve(obj);
   }
