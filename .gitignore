@@ -4,5 +4,6 @@
 .LSOverride
 
 # Directories
-*/node_modules
+***/node_modules
+tutorial-react-node-app
 
