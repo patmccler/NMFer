@@ -36,18 +36,19 @@ body * {
 }
 
 .main {
+  /*
   height: 750px;
   width: 1000px;
+  */
   display: flex;
 }
 
 /* Image Viewer---------------------------------------*/
 
 .slide-viewer {
-  display: flex;
-  flex-direction: column;
   border: solid 2px darkgrey;
-  flex-basis: 80%;
+  width: 80%;
+  height: 100%;
   justify-content: space-between;
 }
 
@@ -56,15 +57,36 @@ body * {
   border-color: solid;
   border-style: darkgrey;
   display: flex;
-  flex-basis: 75%;
+  width: 100%;
+  height: 75%;
   padding: 20 0;
 }
 
 .image-viewer-side-button {
-  flex-basis: 5%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 5%;
 }
-.slide-detail-container {
-  flex-basis: "15%";
+
+.image-viewer-large-image {
+  width: 90%;
+}
+.slide-viewer-detail {
+  width: 100%;
+  height: 25%;
+  overflow: hidden;
+}
+
+.slide-viewer-detail-header {
+  height: 20%;
+}
+
+.slide-viewer-detail > ul {
+  margin: 3%;
+  height: 77%;
+  overflow: scroll;
+  margin: 0;
 }
 
 .slide-detail-item {
@@ -78,7 +100,9 @@ body * {
   border-color: darkgrey;
   border-style: solid;
   padding: 3px;
-  flex-basis: 20%;
+  width: 20%;
+  height: 100%;
+  overflow: scroll;
   display: flex;
   flex-direction: column;
   background-color: blue;

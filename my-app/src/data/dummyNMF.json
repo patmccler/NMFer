@@ -5,7 +5,8 @@
       "content_file_name":
         "https://imgs.xkcd.com/comics/software_development.png",
       "links": [{ "id": "TEST SLIDE" }],
-      "transition": "Default"
+      "transition": "Default",
+      "Views": "1000"
     },
     {
       "slideType": "image",

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 const OverviewSection = props => {
   var slidesToDisplay = [];
   if (props.slides) {
+    console.log(props);
     props.slides.map((slide, index) => {
       slidesToDisplay.push(
         <SlideThumb
@@ -24,6 +25,7 @@ const OverviewSection = props => {
     </div>
   );
 };
+//style={{ width: props.width }}f
 
 const SlideThumb = props => {
   return (

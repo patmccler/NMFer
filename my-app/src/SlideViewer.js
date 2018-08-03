@@ -35,7 +35,9 @@ const SlideDetail = props => {
   }
   return (
     <div className="slide-viewer-detail">
-      <h3>Slide Details for slide {props.slideNumber}</h3> <br />
+      <div className="slide-viewer-detail-header">
+        Slide Details for slide {props.slideNumber} <br />
+      </div>
       <ul>{slideDetailsToDisplay}</ul>
     </div>
   );
@@ -50,7 +52,11 @@ const ImageView = props => {
       >
         {"<"}
       </button>
-      <img style={{ flexBasis: "90%" }} src={props.image} />
+      <img
+        className="image-viewer-large-image"
+        src={props.image}
+        alt="MainImage"
+      />
       <button
         onClick={() => props.onClick(props.slideNumber)}
         className="image-viewer-side-button"
