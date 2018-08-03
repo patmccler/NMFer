@@ -43,6 +43,7 @@ class App extends Component {
       slides: dummyNMF.slides,
       width: window.innerWidth,
       height: window.innerHeight,
+      layout: "wide",
       resizeTimeout: null
     };
     //this.handleResize = this.handleResize.bind(this);
@@ -57,6 +58,7 @@ class App extends Component {
         <Main
           width={this.state.width}
           height={this.state.height}
+          layout={this.state.layout}
           slides={this.state.slides}
         />
       </div>
@@ -80,14 +82,37 @@ class App extends Component {
       });
     }
   };
+
   handleResize = function handleResize() {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    let layout = this.determineLayout(width, height);
     console.log("handle resize");
     this.setState({
-      height: window.innerHeight,
-      width: (window.innerHeight * 4) / 3
+      height,
+      width,
+      layout
     });
   };
+
+  determineLayout = function determineLayout(width, height) {
+    //2 side panel layout - wide
+    let imageWidth =
+      width - this.props.overviewMaxWidth - this.props.detailMaxWidth;
+
+    //side and bottom panel layout - tall
+    let imageHeight = height - this.props.detailMaxHeight;
+
+    return (imageWidth * 3) / 4 > imageHeight ? "wide" : "tall";
+  };
 }
+
+App.defaultProps = {
+  overviewMaxWidth: 200,
+  detailMaxHeight: 200,
+  detailMaxWidth: 200
+};
 
 class Main extends Component {
   constructor(props) {
@@ -104,19 +129,18 @@ class Main extends Component {
           width: this.props.width,
           height: this.props.height
         }}
-        className="main"
+        className={"main " + this.props.layout}
       >
         <OverviewSection
           onClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
           selectedSlide={this.state.selectedSlideIndex}
-          width={this.props.width * 0.2}
         />
         <SlideViewer
+          layout={this.props.layout}
           onClick={i => this.handleOverviewClick(i)}
           slideNumber={this.state.selectedSlideIndex + 1}
           slide={this.state.selectedSlide}
-          width={this.props.width * 0.8}
         />
       </div>
     );

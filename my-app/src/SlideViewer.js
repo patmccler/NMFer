@@ -2,14 +2,15 @@ import React, { Component } from "react";
 
 const SlideViewer = props => {
   let slide = props.slide;
+
   return (
-    <div className="slide-viewer">
+    <div className="slide-viewer wide">
+      <SlideDetail slideNumber={props.slideNumber} slide={slide} />
       <ImageView
         slideNumber={props.slideNumber}
         onClick={props.onClick}
         image={slide.content_file_name}
       />
-      <SlideDetail slideNumber={props.slideNumber} slide={slide} />
     </div>
   );
 };
@@ -52,11 +53,12 @@ const ImageView = props => {
       >
         {"<"}
       </button>
-      <img
-        className="image-viewer-large-image"
-        src={props.image}
-        alt="MainImage"
-      />
+      <div className="image-wrapper">
+        <div
+          className="image-viewer-large-image"
+          style={{ "background-image": `url(${props.image})` }}
+        />
+      </div>
       <button
         onClick={() => props.onClick(props.slideNumber)}
         className="image-viewer-side-button"
@@ -66,5 +68,8 @@ const ImageView = props => {
     </div>
   );
 };
+// //className="image-viewer-large-image"
+// src={props.image}
+// alt="MainImage"
 
 export default SlideViewer;
