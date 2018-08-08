@@ -102,21 +102,20 @@ class App extends Component {
       var fr = new FileReader();
       let fileName = files[0].name;
 
-      fr.onload = e => {
-        console.log(fileName);
-        console.log(fr);
-        var file = fr.result;
-        console.log(fr.result);
-        this.unpackFile(file, fileName);
-        //console.log(file);
+      // fr.onload = e => {
+      //   console.log(fileName);
+      //   console.log(fr);
+      //   var file = fr.result;
+      //   console.log(fr.result);
+      //   this.unpackFile(file, fileName);
+      //   //console.log(file);
 
-        //var fileObj = JSON.parse(file);
-        //console.log(fileObj);
-      };
+      //   //var fileObj = JSON.parse(file);
+      //   //console.log(fileObj);
+      // };
 
-      fr.readAsText(files[0]);
-
-      console.log(files[0]);
+      this.unpackFile(files[0], fileName);
+      // fr.readAsText(files[0]);
     }
   };
 
@@ -134,6 +133,11 @@ class App extends Component {
 
       case "zip":
         console.log("zip file");
+        var reader = new window.zip.BlobReader(file);
+        console.log(window.zip);
+        window.zip.createReader(reader, zipReader => {
+          console.log(zipReader);
+        });
         break;
 
       case "nmf":
