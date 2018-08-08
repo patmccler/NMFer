@@ -2,36 +2,18 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import OverviewSection from "./OverviewSection.js";
 import SlideViewer from "./SlideViewer.js";
-import ZipLoader from "zip-loader";
 import "./App.css";
 
 import dummyNMF from "./data/dummyNMF.json";
 const windowsNMFPath = "./data/windows-cust-install-prep.nmf";
 
-//TODO add this in <input type="file" id="input-file" />
-//     <button onClick={getFile}>Select File</button>
-
-var getFile = function getFile() {
-  var files = document.getElementById("input-file").files;
-
-  if (files[0]) {
-    var fr = new FileReader();
-
-    fr.onload = e => {
-      console.log(fr);
-      var file = fr.result;
-      console.log(fr.result);
-      unpackFile(file);
-      //console.log(file);
-
-      //var fileObj = JSON.parse(file);
-      //console.log(fileObj);
-    };
-
-    fr.readAsDataURL(files[0]);
-
-    console.log(files[0]);
-  }
+var FilePicker = props => {
+  return (
+    <div>
+      <input type="file" id="input-file" />
+      <button onClick={props.onClick}>Select File</button>
+    </div>
+  );
 };
 
 class App extends Component {
@@ -40,7 +22,7 @@ class App extends Component {
 
     console.log(dummyNMF);
     this.state = {
-      slides: dummyNMF.slides,
+      //  slides: dummyNMF.slides,
       width: window.innerWidth,
       height: window.innerHeight,
       layout: "wide",
@@ -48,6 +30,8 @@ class App extends Component {
     };
     //this.handleResize = this.handleResize.bind(this);
     this.resizeThrottler = this.resizeThrottler.bind(this);
+    this.getFile = this.getFile.bind(this);
+    this.unpackFile = this.unpackFile.bind(this);
 
     window.addEventListener("resize", this.resizeThrottler, false);
   }
@@ -55,12 +39,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Main
-          width={this.state.width}
-          height={this.state.height}
-          layout={this.state.layout}
-          slides={this.state.slides}
-        />
+        {this.state.slides ? (
+          <Main
+            width={this.state.width}
+            height={this.state.height}
+            layout={this.state.layout}
+            slides={this.state.slides}
+          />
+        ) : (
+          <FilePicker onClick={this.getFile} />
+        )}
       </div>
     );
   }
@@ -105,6 +93,34 @@ class App extends Component {
     let imageHeight = height - this.props.detailMaxHeight;
 
     return (imageWidth * 3) / 4 > imageHeight ? "wide" : "tall";
+  };
+
+  getFile = function getFile() {
+    var files = document.getElementById("input-file").files;
+    console.log(this);
+    if (files[0]) {
+      var fr = new FileReader();
+
+      fr.onload = e => {
+        console.log(fr);
+        var file = fr.result;
+        console.log(fr.result);
+        this.unpackFile(file);
+        //console.log(file);
+
+        //var fileObj = JSON.parse(file);
+        //console.log(fileObj);
+      };
+
+      fr.readAsText(files[0]);
+
+      console.log(files[0]);
+    }
+  };
+
+  unpackFile = file => {
+    // todo probably use zip.js
+    this.setState({ slides: JSON.parse(file).slides });
   };
 }
 
@@ -162,66 +178,5 @@ class Main extends Component {
 Main.defaultProps = {
   initialSlide: 0
 };
-
-function unpackFile(file) {
-  console.log("Unpacking file");
-  var loader = new ZipLoader(file);
-
-  loader.load.then(() => {
-    console.log("loaded!");
-    console.log(loader.files);
-  });
-
-  // ZipLoader.unzip(file).then(ZipLoaderInstance => {
-  //   console.log("Hello");
-  //   console.log(ZipLoaderInstance.files);
-  //});
-}
-
-// const OverviewSection = props => {
-//   var slidesToDisplay = [];
-//   if (props.slides) {
-//     props.slides.map((slide, index) => {
-//       slidesToDisplay.push(
-//         <SlideThumb
-//           index={index}
-//           slide={slide}
-//           onClick={() => props.onClick(index)}
-//           key={index}
-//         />
-//       );
-//     });
-//   } else {
-//     slidesToDisplay = [<span key="default">NO SLIDES FOUND</span>];
-//   }
-
-//   return (
-//     <div
-//       style={{
-//         borderWidth: 2,
-//         borderColor: "darkgrey",
-//         borderStyle: "solid",
-//         padding: 3,
-//         flexBasis: "20%",
-//         display: "flex",
-//         flexDirection: "column",
-//         backgroundColor: "blue"
-//       }}
-//       className="overview-section"
-//     >
-//       {slidesToDisplay.map((slide, i) => slide)}
-//     </div>
-//   );
-// };
-
-// const SlideThumb = props => {
-//   return (
-//     <img
-//       onClick={props.onClick}
-//       style={{ width: "100%", height: 120, paddingBottom: 3 }}
-//       src={props.slide.content_file_name}
-//     />
-//   );
-// };
 
 export default App;
