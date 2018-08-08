@@ -57,7 +57,7 @@ const ImageView = props => {
       <div className="image-wrapper">
         <div
           className="image-viewer-large-image"
-          style={{ "background-image": `url(${props.image})` }}
+          style={{ backgroundImage: `url(${props.image})` }}
         />
       </div>
       <button

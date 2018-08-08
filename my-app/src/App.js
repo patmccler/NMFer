@@ -97,15 +97,17 @@ class App extends Component {
 
   getFile = function getFile() {
     var files = document.getElementById("input-file").files;
-    console.log(this);
+
     if (files[0]) {
       var fr = new FileReader();
+      let fileName = files[0].name;
 
       fr.onload = e => {
+        console.log(fileName);
         console.log(fr);
         var file = fr.result;
         console.log(fr.result);
-        this.unpackFile(file);
+        this.unpackFile(file, fileName);
         //console.log(file);
 
         //var fileObj = JSON.parse(file);
@@ -118,9 +120,29 @@ class App extends Component {
     }
   };
 
-  unpackFile = file => {
-    // todo probably use zip.js
-    this.setState({ slides: JSON.parse(file).slides });
+  // todo probably use zip.js
+  unpackFile = (file, fileName) => {
+    let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
+
+    console.log(fileName);
+
+    switch (fileExtension) {
+      case "json":
+        console.log("Parsing JSON");
+        this.setState({ slides: JSON.parse(file).slides });
+        break;
+
+      case "zip":
+        console.log("zip file");
+        break;
+
+      case "nmf":
+        console.log("nmf file");
+        break;
+
+      default:
+        console.log("unsupported file type");
+    }
   };
 }
 
