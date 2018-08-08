@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 
+//TODO: Put slide detail after image view for tall view, need to get that from props somehow
 const SlideViewer = props => {
   let slide = props.slide;
 
   return (
-    <div className="slide-viewer wide">
+    <div className="slide-viewer">
       <SlideDetail slideNumber={props.slideNumber} slide={slide} />
       <ImageView
         slideNumber={props.slideNumber}

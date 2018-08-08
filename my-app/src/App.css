@@ -39,18 +39,15 @@ body * {
   overflow: hidden;
 }
 
-.main {
-  /*
-  height: 750px;
-  width: 1000px;
-  */
-}
+/* .main {
+ 
+} */
 
 /* Image Viewer---------------------------------------*/
 
 .slide-viewer {
   border: solid 2px darkgrey;
-
+  position: relative;
   height: 100%;
   overflow: auto;
 }
@@ -117,9 +114,10 @@ body * {
   overflow: auto;
 }
 
-.side-viewer-detail.tall {
-  width: 200px;
-  height: 200px;
+.tall .slide-viewer-detail {
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 
 .slide-viewer-detail-header {
