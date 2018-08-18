@@ -10,6 +10,7 @@ const OverviewSection = props => {
           selected={props.selectedSlide === index ? true : false}
           index={index}
           slide={slide}
+          content={props.content[slide.content_file_name]}
           onClick={() => props.onClick(index)}
           key={index}
         />
@@ -29,6 +30,11 @@ const OverviewSection = props => {
 
 const SlideThumb = props => {
   let source = props.slide.content_file_name;
+  if (source.includes("content/")) {
+    console.log(props.content);
+    let image = new Blob([props.content], { type: "image/jpeg" });
+    source = URL.createObjectURL(image);
+  }
   //let contentSource = props.content[source];
   return (
     <img

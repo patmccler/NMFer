@@ -136,7 +136,7 @@ class App extends Component {
         }
         console.log("zip file");
 
-        window.zip.createReader(new window.zip.TextReader(file), zipReader => {
+        window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
           zipReader.getEntries(entries => {
             console.log(entries);
 
@@ -151,7 +151,7 @@ class App extends Component {
                   this.setState({ slides: JSON.parse(file).slides });
                 });
               } else if (fileName.includes("content")) {
-                entry.getData(new window.zip.TextWriter(), file => {
+                entry.getData(new window.zip.BlobWriter(), file => {
                   console.log(entry);
                   this.setState((prevState, props) => {
                     let content = prevState.content;
@@ -159,7 +159,6 @@ class App extends Component {
                     console.log(content);
                     return { content };
                   });
-                  //  this.setState({ slides: JSON.parse(file).slides });
                 });
               }
             });
