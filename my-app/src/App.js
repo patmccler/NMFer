@@ -45,6 +45,7 @@ class App extends Component {
             height={this.state.height}
             layout={this.state.layout}
             slides={this.state.slides}
+            content={this.state.content}
           />
         ) : (
           <FilePicker onClick={this.getFile} />
@@ -200,6 +201,7 @@ class Main extends Component {
         <OverviewSection
           onClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
+          content={this.props.content}
           selectedSlide={this.state.selectedSlideIndex}
         />
         <SlideViewer

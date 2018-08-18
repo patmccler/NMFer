@@ -28,6 +28,8 @@ const OverviewSection = props => {
 //style={{ width: props.width }}f
 
 const SlideThumb = props => {
+  let source = props.slide.content_file_name;
+  //let contentSource = props.content[source];
   return (
     <img
       onClick={props.onClick}
@@ -35,7 +37,7 @@ const SlideThumb = props => {
         "overview-slide-thumb" +
         (props.selected ? " overview-slide-thumb-highlight" : "")
       }
-      src={props.slide.content_file_name}
+      src={source}
     />
   );
 };
