@@ -25,7 +25,8 @@ class App extends Component {
       width: window.innerWidth,
       height: window.innerHeight,
       layout: "wide",
-      resizeTimeout: null
+      resizeTimeout: null,
+      content: {}
     };
     //this.handleResize = this.handleResize.bind(this);
     this.resizeThrottler = this.resizeThrottler.bind(this);
@@ -129,22 +130,37 @@ class App extends Component {
 
       case "nmf":
       case "zip":
-        fileExtension === ".zip"
-          ? (fileName = file.name.replace("nmf", "zip"))
-          : false;
+        if (fileExtension === ".nmf") {
+          fileName = file.name.replace("nmf", "zip");
+        }
         console.log("zip file");
-        var reader = new window.zip.TextReader(file);
-        console.log(window.zip);
-        window.zip.createReader(reader, zipReader => {
+
+        window.zip.createReader(new window.zip.TextReader(file), zipReader => {
           zipReader.getEntries(entries => {
             console.log(entries);
-            // console.log(entries[0].filename);
-            entries[0].getData(new window.zip.TextWriter(), file => {
-              this.setState({ slides: JSON.parse(file).slides });
-            });
-            entries[1].getData(new window.zip.TextWriter(), file => {
-              console.log(file);
-              //  this.setState({ slides: JSON.parse(file).slides });
+
+            entries.map(entry => {
+              let fileName = entry.filename;
+              if (fileName.includes("__") || fileName.includes("/.")) return; //zip seems to include __MACOX/each file .. dunno
+
+              if (fileName.includes("manifest.json")) {
+                console.log(entry);
+                entry.getData(new window.zip.TextWriter(), file => {
+                  console.log(file);
+                  this.setState({ slides: JSON.parse(file).slides });
+                });
+              } else if (fileName.includes("content")) {
+                entry.getData(new window.zip.TextWriter(), file => {
+                  console.log(entry);
+                  this.setState((prevState, props) => {
+                    let content = prevState.content;
+                    content[fileName] = file;
+                    console.log(content);
+                    return { content };
+                  });
+                  //  this.setState({ slides: JSON.parse(file).slides });
+                });
+              }
             });
           });
 
