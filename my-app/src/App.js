@@ -98,23 +98,9 @@ class App extends Component {
     var files = document.getElementById("input-file").files;
 
     if (files[0]) {
-      var fr = new FileReader();
       let fileName = files[0].name;
-
-      fr.onload = e => {
-        console.log(fileName);
-        console.log(fr);
-        var file = fr.result;
-        console.log(fr.result);
-        this.unpackFile(file, fileName);
-        //console.log(file);
-
-        //var fileObj = JSON.parse(file);
-        //console.log(fileObj);
-      };
-
       this.unpackFile(files[0], fileName);
-      //fr.readAsText(files[0]);
+      //
     }
   };
 
@@ -123,32 +109,47 @@ class App extends Component {
     let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
 
     console.log(fileName);
+    console.log(file);
 
     switch (fileExtension) {
       case "json":
         console.log("Parsing JSON");
-        this.setState({ slides: JSON.parse(file).slides });
+        console.log(file);
+        var fr = new FileReader();
+
+        fr.onload = e => {
+          var file = fr.result;
+          console.log(fr.result);
+
+          this.setState({ slides: JSON.parse(fr.result).slides });
+        };
+
+        fr.readAsText(file);
         break;
 
+      case "nmf":
       case "zip":
+        fileExtension === ".zip"
+          ? (fileName = file.name.replace("nmf", "zip"))
+          : false;
         console.log("zip file");
-        var reader = new window.zip.BlobReader(file);
+        var reader = new window.zip.TextReader(file);
         console.log(window.zip);
         window.zip.createReader(reader, zipReader => {
           zipReader.getEntries(entries => {
-            console.log(entries[0].fileName);
-            // let writer = window.zip.BlobWriter();
-            // entries[0].getData(writer, file => {
-            //   console.log(file);
-            // });
+            console.log(entries);
+            // console.log(entries[0].filename);
+            entries[0].getData(new window.zip.TextWriter(), file => {
+              this.setState({ slides: JSON.parse(file).slides });
+            });
+            entries[1].getData(new window.zip.TextWriter(), file => {
+              console.log(file);
+              //  this.setState({ slides: JSON.parse(file).slides });
+            });
           });
 
           console.log(zipReader);
         });
-        break;
-
-      case "nmf":
-        console.log("nmf file");
         break;
 
       default:
