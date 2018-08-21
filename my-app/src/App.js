@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import OverviewSection from "./OverviewSection.js";
-import SlideViewer from "./SlideViewer.js";
 import Main from "./Main.js";
 import "./App.css";
 
