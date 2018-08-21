@@ -5,8 +5,9 @@ import SlideViewer from "./SlideViewer.js";
 class Main extends Component {
   constructor(props) {
     super(props);
+    let selectedSlide = props.slides ? props.slides[props.initialSlide] : null;
     this.state = {
-      selectedSlide: props.slides[props.initialSlide],
+      selectedSlide: selectedSlide,
       selectedSlideIndex: props.initialSlide
     };
   }

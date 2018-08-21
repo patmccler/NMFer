@@ -10,7 +10,6 @@ const OverviewSection = props => {
           selected={props.selectedSlide === index ? true : false}
           index={index}
           slide={slide}
-          content={props.content[slide.content_file_name]}
           onClick={() => props.onClick(index)}
           key={index}
         />
@@ -29,23 +28,46 @@ const OverviewSection = props => {
 //style={{ width: props.width }}f
 
 const SlideThumb = props => {
-  let source = props.slide.content_file_name;
-  if (source.includes("content/")) {
-    console.log(props.content);
-    let image = new Blob([props.content], { type: "image/jpeg" });
-    source = URL.createObjectURL(image);
+  let elementToReturn;
+
+  switch (props.slide.slide_type) {
+    case "image":
+      elementToReturn = (
+        <img
+          onClick={props.onClick}
+          className={
+            "overview-slide-thumb" +
+            (props.selected ? " overview-slide-thumb-highlight" : "")
+          }
+          src={props.slide.source_path}
+        />
+      );
+
+      break;
+    case "video":
+      elementToReturn = (
+        <video
+          muted
+          autoplay
+          controls
+          playsinline
+          onClick={props.onClick}
+          className={
+            "overview-slide-thumb overview-slide-video" +
+            (props.selected ? " overview-slide-thumb-highlight" : "")
+          }
+          src={props.slide.source_path}
+        >
+          Failed to load{" "}
+        </video>
+      );
+      break;
+
+    default:
+      elementToReturn = <div>UNSUPPORTED SLIDE TYPE</div>;
   }
-  //let contentSource = props.content[source];
-  return (
-    <img
-      onClick={props.onClick}
-      className={
-        "overview-slide-thumb" +
-        (props.selected ? " overview-slide-thumb-highlight" : "")
-      }
-      src={source}
-    />
-  );
+
+  return elementToReturn;
 };
 
 export default OverviewSection;

@@ -1,20 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Main from "./Main.js";
+import MainContainer from "./MainContainer.js";
 import "./App.css";
 
-import dummyNMF from "./data/dummyNMF.json";
-const windowsNMFPath = "./data/windows-cust-install-prep.nmf";
-
-var FilePicker = props => {
-  return (
-    <div>
-      <input type="file" id="input-file" />
-      <button onClick={props.onClick}>Select File</button>
-    </div>
-  );
-};
-
+//App controls the sizing of the page and determines which layout to use
 class App extends Component {
   constructor(props) {
     super(props);
@@ -24,13 +13,10 @@ class App extends Component {
       width: window.innerWidth,
       height: window.innerHeight,
       layout: "wide",
-      resizeTimeout: null,
-      content: {}
+      resizeTimeout: null
     };
     //this.handleResize = this.handleResize.bind(this);
     this.resizeThrottler = this.resizeThrottler.bind(this);
-    this.getFile = this.getFile.bind(this);
-    this.unpackFile = this.unpackFile.bind(this);
 
     window.addEventListener("resize", this.resizeThrottler, false);
   }
@@ -38,17 +24,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.state.slides ? (
-          <Main
-            width={this.state.width}
-            height={this.state.height}
-            layout={this.state.layout}
-            slides={this.state.slides}
-            content={this.state.content}
-          />
-        ) : (
-          <FilePicker onClick={this.getFile} />
-        )}
+        <MainContainer
+          width={this.state.width}
+          height={this.state.height}
+          layout={this.state.layout}
+        />
       </div>
     );
   }
@@ -94,85 +74,9 @@ class App extends Component {
 
     return (imageWidth * 3) / 4 > imageHeight ? "wide" : "tall";
   };
-
-  getFile = function getFile() {
-    var files = document.getElementById("input-file").files;
-
-    if (files[0]) {
-      let fileName = files[0].name;
-      this.unpackFile(files[0], fileName);
-      //
-    }
-  };
-
-  // todo probably use zip.js
-  unpackFile = (file, fileName) => {
-    let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
-
-    console.log(fileName);
-    console.log(file);
-
-    switch (fileExtension) {
-      case "json":
-        console.log("Parsing JSON");
-        console.log(file);
-        var fr = new FileReader();
-
-        fr.onload = e => {
-          var file = fr.result;
-          console.log(fr.result);
-
-          this.setState({ slides: JSON.parse(fr.result).slides });
-        };
-
-        fr.readAsText(file);
-        break;
-
-      case "nmf":
-      case "zip":
-        if (fileExtension === ".nmf") {
-          fileName = file.name.replace("nmf", "zip");
-        }
-        console.log("zip file");
-
-        window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
-          zipReader.getEntries(entries => {
-            console.log(entries);
-
-            entries.map(entry => {
-              let fileName = entry.filename;
-              if (fileName.includes("__") || fileName.includes("/.")) return; //zip seems to include __MACOX/each file .. dunno
-
-              if (fileName.includes("manifest.json")) {
-                console.log(entry);
-                entry.getData(new window.zip.TextWriter(), file => {
-                  console.log(file);
-                  this.setState({ slides: JSON.parse(file).slides });
-                });
-              } else if (fileName.includes("content")) {
-                entry.getData(new window.zip.BlobWriter(), file => {
-                  console.log(entry);
-                  this.setState((prevState, props) => {
-                    let content = prevState.content;
-                    content[fileName] = file;
-                    console.log(content);
-                    return { content };
-                  });
-                });
-              }
-            });
-          });
-
-          console.log(zipReader);
-        });
-        break;
-
-      default:
-        console.log("unsupported file type");
-    }
-  };
 }
 
+//TODO use these to determine width and height of sidebars on app
 App.defaultProps = {
   overviewMaxWidth: 200,
   detailMaxHeight: 200,

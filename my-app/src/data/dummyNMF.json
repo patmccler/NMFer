@@ -1,23 +1,22 @@
 {
   "slides": [
     {
-      "slideType": "image",
-      "content_file_name":
-        "https://imgs.xkcd.com/comics/software_development.png",
+      "slide_type": "image",
+      "content_file_name": "https://imgs.xkcd.com/comics/software_development.png",
       "links": [{ "id": "TEST SLIDE" }],
       "transition": "Default",
       "Views": "1000"
     },
     {
-      "slideType": "image",
+      "slide_type": "image",
       "content_file_name": "https://imgs.xkcd.com/comics/good_code.png"
     },
     {
-      "slideType": "image",
+      "slide_type": "image",
       "content_file_name": "https://imgs.xkcd.com/comics/password_strength.png"
     },
     {
-      "slideType": "image",
+      "slide_type": "image",
       "content_file_name": " https://imgs.xkcd.com/comics/mistranslations.png",
       "message": "Hi Kristen!"
     }
