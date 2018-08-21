@@ -10,7 +10,7 @@ const SlideViewer = props => {
       <ImageView
         slideNumber={props.slideNumber}
         onClick={props.onClick}
-        image={slide.content_file_name}
+        source={slide.source_path}
       />
     </div>
   );
@@ -57,7 +57,7 @@ const ImageView = props => {
       <div className="image-wrapper">
         <div
           className="image-viewer-large-image"
-          style={{ backgroundImage: `url(${props.image})` }}
+          style={{ backgroundImage: `url(${props.source})` }}
         />
       </div>
       <button

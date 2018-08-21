@@ -48,9 +48,6 @@ const SlideThumb = props => {
       elementToReturn = (
         <video
           muted
-          autoplay
-          controls
-          playsinline
           onClick={props.onClick}
           className={
             "overview-slide-thumb overview-slide-video" +

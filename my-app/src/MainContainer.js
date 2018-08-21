@@ -26,19 +26,26 @@ class MainContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      prevState.slides == this.state.slides &&
-      prevState.content == this.state.content
+      this.state.slides === prevState.slides &&
+      !(this.state.content === prevState.content)
     ) {
+      console.log("No change in didupdate");
+
       return;
     }
 
+    //Works, needs cleanup probably
     let newSlides = this.getUpdatedDisplayableSlides(
       this.state.slides,
       this.state.content
     );
 
     //if there are no new slides stop
-    if (!newSlides) {
+    if (
+      !newSlides ||
+      (this.state.displayableSlides &&
+        newSlides.count === this.state.displayableSlides.count)
+    ) {
       console.log("No update needed/ready");
 
       return;
@@ -151,15 +158,18 @@ class MainContainer extends Component {
   };
 
   getUpdatedDisplayableSlides = function updateDisplaySlides(slides, content) {
-    if (!(slides && content)) {
+    if (!slides || !content) {
       return false;
     }
 
     console.log("Updating display slides");
+
     let displayableSlides = [];
     let error = false;
 
     slides.map(slide => {
+      console.log(slide);
+      console.log(content);
       let displayableSlide = this.buildDisplayableSlide(
         slide,
         content[slide.content_file_name]
@@ -178,6 +188,10 @@ class MainContainer extends Component {
   //for Images, builds a URL for the corresponding "file" in the content object
   //video is wip
   buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
+    if (!content) {
+      return;
+    }
+
     let newSlide = Object.assign({}, slide);
 
     switch (slide.slide_type) {
@@ -191,7 +205,8 @@ class MainContainer extends Component {
         break;
       case "video":
         if (newSlide.content_file_name.includes("content/")) {
-          let video = new Blob([content], { type: "video/mp4" });
+          console.log(content);
+          let video = content; //new Blob([content], { type: "video/mp4" });
           newSlide.source_path = URL.createObjectURL(video);
         }
         break;
