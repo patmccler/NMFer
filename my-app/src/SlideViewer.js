@@ -7,7 +7,8 @@ const SlideViewer = props => {
   return (
     <div className="slide-viewer">
       <SlideDetail slideNumber={props.slideNumber} slide={slide} />
-      <ImageView
+      <LargeView
+        type={slide.slide_type}
         slideNumber={props.slideNumber}
         onClick={props.onClick}
         source={slide.source_path}
@@ -45,7 +46,7 @@ const SlideDetail = props => {
   );
 };
 
-const ImageView = props => {
+const LargeView = props => {
   return (
     <div className="image-viewer">
       <button
@@ -54,11 +55,13 @@ const ImageView = props => {
       >
         {"<"}
       </button>
+      ]
       <div className="image-wrapper">
-        <div
-          className="image-viewer-large-image"
-          style={{ backgroundImage: `url(${props.source})` }}
-        />
+        {props.type == "image" ? (
+          <ImageView source={props.source} />
+        ) : (
+          <VideoView source={props.source} />
+        )}
       </div>
       <button
         onClick={() => props.onClick(props.slideNumber)}
@@ -69,6 +72,29 @@ const ImageView = props => {
     </div>
   );
 };
+
+const VideoView = props => {
+  return (
+    <video
+      muted
+      controls
+      className="image-viewer-large-image"
+      src={props.source}
+    >
+      Failed to load{" "}
+    </video>
+  );
+};
+
+const ImageView = props => {
+  return (
+    <div
+      className="image-viewer-large-image"
+      style={{ backgroundImage: `url(${props.source})` }}
+    />
+  );
+};
+
 // //className="image-viewer-large-image"
 // src={props.image}
 // alt="MainImage"
