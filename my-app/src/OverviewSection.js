@@ -5,6 +5,9 @@ const OverviewSection = props => {
   if (props.slides) {
     console.log(props);
     props.slides.map((slide, index) => {
+      if (slide.chapter_title) {
+        slidesToDisplay.push(<ChapterTitle title={slide.chapter_title} />);
+      }
       slidesToDisplay.push(
         <SlideThumb
           selected={props.selectedSlide === index ? true : false}
@@ -25,7 +28,11 @@ const OverviewSection = props => {
     </div>
   );
 };
-//style={{ width: props.width }}f
+//style={{ width: props.width }}
+
+const ChapterTitle = props => {
+  return <div className="chapterTitle">{props.title}</div>;
+};
 
 const SlideThumb = props => {
   let elementToReturn;

@@ -64,19 +64,15 @@ class MainContainer extends Component {
     //just send src url and slide info
     // slides={this.state.slides}
     //content={this.state.content}
-    return (
-      <div>
-        {this.state.displayableSlides ? (
-          <Main
-            width={this.props.width}
-            height={this.props.height}
-            layout={this.props.layout}
-            slides={this.state.displayableSlides}
-          />
-        ) : (
-          <FilePicker onClick={this.getFile} />
-        )}
-      </div>
+    return this.state.displayableSlides ? (
+      <Main
+        width={this.props.width}
+        height={this.props.height}
+        layout={this.props.layout}
+        slides={this.state.displayableSlides}
+      />
+    ) : (
+      <FilePicker onClick={this.getFile} />
     );
   }
 

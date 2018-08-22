@@ -55,7 +55,6 @@ const LargeView = props => {
       >
         {"<"}
       </button>
-      ]
       <div className="image-wrapper">
         {props.type == "image" ? (
           <ImageView source={props.source} />
@@ -75,12 +74,7 @@ const LargeView = props => {
 
 const VideoView = props => {
   return (
-    <video
-      muted
-      controls
-      className="image-viewer-large-image"
-      src={props.source}
-    >
+    <video autoPlay className="image-viewer-large-video" src={props.source}>
       Failed to load{" "}
     </video>
   );

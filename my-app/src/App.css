@@ -63,6 +63,9 @@ body * {
   background-position: center;
 }
 
+.image-viewer-large-video {
+  width: 100%;
+}
 .image-viewer > div {
   width: 90%;
   display: inline-block;
