@@ -55,13 +55,12 @@ const LargeView = props => {
       >
         {"<"}
       </button>
-      <div className="image-wrapper">
-        {props.type == "image" ? (
-          <ImageView source={props.source} />
-        ) : (
-          <VideoView source={props.source} />
-        )}
-      </div>
+
+      {props.type == "image" ? (
+        <ImageView source={props.source} />
+      ) : (
+        <VideoView source={props.source} />
+      )}
       <button
         onClick={() => props.onClick(props.slideNumber)}
         className="image-viewer-side-button"
@@ -72,20 +71,27 @@ const LargeView = props => {
   );
 };
 
+//TODO remove wrapper div - should center OK
 const VideoView = props => {
   return (
-    <video autoPlay className="image-viewer-large-video" src={props.source}>
-      Failed to load{" "}
-    </video>
+    <div className="video-wrapper">
+      <div className="image-viewer-3-by-4">
+        <video autoPlay className="image-viewer-large-video" src={props.source}>
+          Failed to load{" "}
+        </video>
+      </div>
+    </div>
   );
 };
 
 const ImageView = props => {
   return (
-    <div
-      className="image-viewer-large-image"
-      style={{ backgroundImage: `url(${props.source})` }}
-    />
+    <div className="image-wrapper">
+      <div
+        className="image-viewer-large-image image-viewer-3-by-4"
+        style={{ backgroundImage: `url(${props.source})` }}
+      />
+    </div>
   );
 };
 
