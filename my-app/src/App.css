@@ -94,6 +94,7 @@ body * {
 .tall .slide-viewer-detail {
   position: absolute;
   left: 0;
+  right: 0;
   bottom: 0;
 }
 
@@ -132,20 +133,38 @@ body * {
   overflow-x: hidden;
 
   flex-direction: column;
-  background-color: blue;
+  background-color: #002266;
 }
 
 .overview-slide-thumb {
   width: 100%;
   height: 120px;
   padding-bottom: 3px;
+  border-bottom: solid black 2px;
 }
 
 .overview-slide-thumb-highlight {
   box-sizing: content-box;
-  border-color: red;
+  border-color: #f6f9cc;
   border-width: 3px;
   border-style: solid;
   margin: -3px 0 0px -3px;
   padding: 0;
+}
+
+.chapter {
+  background: #74829e;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.chapter-title {
+  background: #74829e;
+  border-bottom: solid black 2px;
+}
+
+.chapter.hidden > .chapter-body {
+  overflow: hidden;
+  height: 0;
 }
