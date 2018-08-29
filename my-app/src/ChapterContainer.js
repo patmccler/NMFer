@@ -5,14 +5,29 @@ import Chapter from "./Chapter.js";
 class ChapterContainer extends Component {
   constructor(props) {
     super(props);
-
-    let chapterHideState = props.chapters.map(chapter => true);
+    let chapterHideState = props.chapters.map(
+      (chapter, index) =>
+        index === props.chapterWithSelectedSlide ? false : true
+    );
 
     this.state = {
       chapterHideState: chapterHideState
     };
-
     this.handleChapterTitleClick = this.handleChapterTitleClick.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("CHAPTER CONTAINER DID UPDATE");
+    if (
+      prevProps.chapterWithSelectedSlide != this.props.chapterWithSelectedSlide
+    ) {
+      this.setState((prevState, props) => {
+        let chapterHideState = prevState.chapterHideState;
+        chapterHideState[prevProps.chapterWithSelectedSlide] = true;
+        chapterHideState[props.chapterWithSelectedSlide] = false;
+        return chapterHideState;
+      });
+    }
   }
 
   handleChapterTitleClick(i) {
@@ -35,6 +50,7 @@ class ChapterContainer extends Component {
             isHidden={this.state.chapterHideState[index]}
             slides={chapter.slides}
             title={chapter.title}
+            key={index}
             handleThumbClick={this.props.handleThumbClick}
             onChapterTitleClick={() => this.handleChapterTitleClick(index)}
           />
