@@ -6,23 +6,33 @@ class ChapterContainer extends Component {
   constructor(props) {
     super(props);
 
+    let chapterHideState = props.chapters.map(chapter => true);
+
     this.state = {
-      chapters: props.chapters
+      chapterHideState: chapterHideState
     };
 
     this.handleChapterTitleClick = this.handleChapterTitleClick.bind(this);
   }
 
   handleChapterTitleClick(i) {
-    console.log("CHAPTER TITLE CLICKED");
-    console.log("Chapter " + (i + 1) + " clicked");
+    console.log("Toggling Chapter " + (i + 1) + " hidden");
+    this.setState((prevState, props) => {
+      let newChapterHideState = prevState.chapterHideState;
+      newChapterHideState[i] = !newChapterHideState[i];
+
+      return newChapterHideState;
+    });
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="chapterContainer">
-        {this.state.chapters.map((chapter, index) => (
+        {this.props.chapters.map((chapter, index) => (
           <Chapter
+            selectedSlide={this.props.selectedSlide}
+            isHidden={this.state.chapterHideState[index]}
             slides={chapter.slides}
             title={chapter.title}
             handleThumbClick={this.props.handleThumbClick}
@@ -33,7 +43,5 @@ class ChapterContainer extends Component {
     );
   }
 }
-
-function renderChapter() {}
 
 export default ChapterContainer;

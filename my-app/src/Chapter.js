@@ -23,9 +23,11 @@ const Chapter = props => {
   }
 
   return (
-    <div className="chapter">
+    <div className={"chapter" + (props.isHidden ? " hidden" : "")}>
       <ChapterTitle onClick={props.onChapterTitleClick} title={props.title} />
-      {slidesToDisplay.map((slide, i) => slide)}
+      <div className="chapter-body">
+        {slidesToDisplay.map((slide, i) => slide)}
+      </div>
     </div>
   );
 };
