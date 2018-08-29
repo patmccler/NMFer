@@ -21,7 +21,7 @@ class Main extends Component {
         className={"main " + this.props.layout}
       >
         <OverviewSection
-          onClick={i => this.handleOverviewClick(i)}
+          handleThumbClick={i => this.handleOverviewClick(i)}
           slides={this.props.slides}
           selectedSlide={this.state.selectedSlideIndex}
         />
