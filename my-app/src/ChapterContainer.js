@@ -9,6 +9,11 @@ class ChapterContainer extends Component {
       (chapter, index) =>
         index === props.chapterWithSelectedSlide ? false : true
     );
+    this.activeSlide = React.createRef();
+
+    this.scrollActiveSlide = () => {
+      this.activeSlide.scrollIntoView();
+    };
 
     this.state = {
       chapterHideState: chapterHideState
@@ -17,7 +22,6 @@ class ChapterContainer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("CHAPTER CONTAINER DID UPDATE");
     if (
       prevProps.chapterWithSelectedSlide != this.props.chapterWithSelectedSlide
     ) {
@@ -28,6 +32,11 @@ class ChapterContainer extends Component {
         return chapterHideState;
       });
     }
+
+    if (prevProps.selectedSlide != this.props.selectedSlide) {
+      console.log("New selected Slide");
+      console.log(this.activeSlide);
+    }
   }
 
   handleChapterTitleClick(i) {
@@ -35,7 +44,6 @@ class ChapterContainer extends Component {
     this.setState((prevState, props) => {
       let newChapterHideState = prevState.chapterHideState;
       newChapterHideState[i] = !newChapterHideState[i];
-
       return newChapterHideState;
     });
   }
@@ -46,6 +54,7 @@ class ChapterContainer extends Component {
       <div className="chapterContainer">
         {this.props.chapters.map((chapter, index) => (
           <Chapter
+            selectedSlideRef={this.activeSlide}
             selectedSlide={this.props.selectedSlide}
             isHidden={this.state.chapterHideState[index]}
             slides={chapter.slides}
