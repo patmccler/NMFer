@@ -36,6 +36,8 @@ class ChapterContainer extends Component {
     if (prevProps.selectedSlide != this.props.selectedSlide) {
       console.log("New selected Slide");
       console.log(this.activeSlide);
+      if (!checkVisible(this.activeSlide.current))
+        this.activeSlide.current.scrollIntoView();
     }
   }
 
@@ -67,6 +69,17 @@ class ChapterContainer extends Component {
       </div>
     );
   }
+}
+
+function checkVisible(elm) {
+  var rect = elm.getBoundingClientRect();
+  var viewHeight = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight
+  );
+  console.log(`viewHeight: ${viewHeight}`);
+  console.log(`top: ${rect.top}, bot: ${rect.bottom}`);
+  return !(rect.bottom > viewHeight || rect.top <= 0);
 }
 
 export default ChapterContainer;
