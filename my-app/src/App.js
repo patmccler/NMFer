@@ -10,9 +10,11 @@ class App extends Component {
 
     this.state = {
       //  slides: dummyNMF.slides,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      layout: "wide",
+      configs: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        layout: "wide"
+      },
       resizeTimeout: null
     };
     //this.handleResize = this.handleResize.bind(this);
@@ -24,11 +26,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <MainContainer
-          width={this.state.width}
-          height={this.state.height}
-          layout={this.state.layout}
-        />
+        <MainContainer {...this.state.configs} />
       </div>
     );
   }
@@ -58,9 +56,11 @@ class App extends Component {
     let layout = this.determineLayout(width, height);
     console.log("handle resize");
     this.setState({
-      height,
-      width,
-      layout
+      configs: {
+        height,
+        width,
+        layout
+      }
     });
   };
 

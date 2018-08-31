@@ -14,63 +14,15 @@ class MainContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: {},
-      slides: null,
       displayableSlides: null
     };
     this.unpackFile = this.unpackFile.bind(this);
     this.getFile = this.getFile.bind(this);
   }
-  //   render() {
-  //     return <Main {...this.props} />;
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.state.slides === prevState.slides &&
-      !(this.state.content === prevState.content)
-    ) {
-      console.log("No change in didupdate");
-
-      return;
-    }
-
-    //Works, needs cleanup probably
-    let newSlides = this.getUpdatedDisplayableSlides(
-      this.state.slides,
-      this.state.content
-    );
-
-    //if there are no new slides stop
-    if (
-      !newSlides ||
-      (this.state.displayableSlides &&
-        newSlides.count === this.state.displayableSlides.count)
-    ) {
-      console.log("No update needed/ready");
-
-      return;
-    }
-
-    console.log(newSlides);
-    this.setState((prevState, props) => {
-      return {
-        displayableSlides: newSlides
-      };
-    });
-  }
 
   render() {
-    //TODO pull slides and content out and process before sending data down to subcomponents
-    //just send src url and slide info
-    // slides={this.state.slides}
-    //content={this.state.content}
     return this.state.displayableSlides ? (
-      <Main
-        width={this.props.width}
-        height={this.props.height}
-        layout={this.props.layout}
-        slides={this.state.displayableSlides}
-      />
+      <Main {...this.props} slides={this.state.displayableSlides} />
     ) : (
       <FilePicker onClick={this.getFile} />
     );
@@ -89,9 +41,6 @@ class MainContainer extends Component {
   //TODO Separate these out to individual functions
   unpackFile = (file, fileName) => {
     let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
-
-    console.log(fileName);
-    console.log(file);
 
     switch (fileExtension) {
       case "json":
@@ -117,28 +66,28 @@ class MainContainer extends Component {
         console.log("zip file");
 
         window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
+          let totalFilesLoaded = 0;
+          let slideContent = {};
+          let slides;
           zipReader.getEntries(entries => {
-            console.log(entries);
-
             entries.map(entry => {
               let fileName = entry.filename;
               if (fileName.includes("__") || fileName.includes("/.")) return; //zip seems to include __MACOX/each file .. dunno
 
               if (fileName.includes("manifest.json")) {
-                console.log(entry);
                 entry.getData(new window.zip.TextWriter(), file => {
-                  console.log(file);
-                  this.setState({ slides: JSON.parse(file).slides });
+                  slides = JSON.parse(file).slides;
                 });
-              } else if (fileName.includes("content")) {
+              } else if (/content\/./i.test(fileName)) {
                 entry.getData(new window.zip.BlobWriter(), file => {
-                  console.log(entry);
-                  this.setState((prevState, props) => {
-                    let content = prevState.content;
-                    content[fileName] = file;
-                    console.log(content);
-                    return { content };
-                  });
+                  totalFilesLoaded += 1;
+                  slideContent[fileName] = file;
+                  console.log(slideContent);
+                  console.log(totalFilesLoaded);
+
+                  if (slides && slides.length == totalFilesLoaded) {
+                    this.showSlides(slides, slideContent);
+                  }
                 });
               }
             });
@@ -152,6 +101,18 @@ class MainContainer extends Component {
         console.log("unsupported file type");
     }
   };
+
+  showSlides(slides, content) {
+    let displayableSlides = this.getUpdatedDisplayableSlides(slides, content);
+
+    if (displayableSlides) {
+      this.setState((prevState, props) => {
+        return {
+          displayableSlides
+        };
+      });
+    }
+  }
 
   getUpdatedDisplayableSlides = function updateDisplaySlides(slides, content) {
     if (!slides || !content) {
