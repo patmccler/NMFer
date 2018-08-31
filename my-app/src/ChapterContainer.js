@@ -5,14 +5,40 @@ import Chapter from "./Chapter.js";
 class ChapterContainer extends Component {
   constructor(props) {
     super(props);
+    let chapterHideState = props.chapters.map(
+      (chapter, index) =>
+        index === props.chapterWithSelectedSlide ? false : true
+    );
+    this.activeSlide = React.createRef();
 
-    let chapterHideState = props.chapters.map(chapter => true);
+    this.scrollActiveSlide = () => {
+      this.activeSlide.scrollIntoView();
+    };
 
     this.state = {
       chapterHideState: chapterHideState
     };
-
     this.handleChapterTitleClick = this.handleChapterTitleClick.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.chapterWithSelectedSlide != this.props.chapterWithSelectedSlide
+    ) {
+      this.setState((prevState, props) => {
+        let chapterHideState = prevState.chapterHideState;
+        chapterHideState[prevProps.chapterWithSelectedSlide] = true;
+        chapterHideState[props.chapterWithSelectedSlide] = false;
+        return chapterHideState;
+      });
+    }
+
+    if (prevProps.selectedSlide != this.props.selectedSlide) {
+      console.log("New selected Slide");
+      console.log(this.activeSlide);
+      if (!checkVisible(this.activeSlide.current))
+        this.activeSlide.current.scrollIntoView();
+    }
   }
 
   handleChapterTitleClick(i) {
@@ -20,7 +46,6 @@ class ChapterContainer extends Component {
     this.setState((prevState, props) => {
       let newChapterHideState = prevState.chapterHideState;
       newChapterHideState[i] = !newChapterHideState[i];
-
       return newChapterHideState;
     });
   }
@@ -31,10 +56,12 @@ class ChapterContainer extends Component {
       <div className="chapterContainer">
         {this.props.chapters.map((chapter, index) => (
           <Chapter
+            selectedSlideRef={this.activeSlide}
             selectedSlide={this.props.selectedSlide}
             isHidden={this.state.chapterHideState[index]}
             slides={chapter.slides}
             title={chapter.title}
+            key={index}
             handleThumbClick={this.props.handleThumbClick}
             onChapterTitleClick={() => this.handleChapterTitleClick(index)}
           />
@@ -42,6 +69,17 @@ class ChapterContainer extends Component {
       </div>
     );
   }
+}
+
+function checkVisible(elm) {
+  var rect = elm.getBoundingClientRect();
+  var viewHeight = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight
+  );
+  console.log(`viewHeight: ${viewHeight}`);
+  console.log(`top: ${rect.top}, bot: ${rect.bottom}`);
+  return !(rect.bottom > viewHeight || rect.top <= 0);
 }
 
 export default ChapterContainer;

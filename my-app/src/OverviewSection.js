@@ -18,6 +18,7 @@ const OverviewSection = props => {
   let currentChapterTitle = "";
   //array of objects with a list of slides and the title
   let chapters = [];
+  let chapterWithSelectedSlide;
 
   slides.map((slide, index) => {
     slide.index = index;
@@ -26,11 +27,14 @@ const OverviewSection = props => {
       if (currentChapterTitle !== "") {
         chapters.push({ slides: currentChapter, title: currentChapterTitle });
       }
-      currentChapter = [slide];
+      currentChapter = [];
       currentChapterTitle = slide.chapter_title;
-    } else {
-      currentChapter.push(slide);
     }
+    //test for slide being selected so we can save that chapter
+    if (index === props.selectedSlide) {
+      chapterWithSelectedSlide = chapters.length;
+    }
+    currentChapter.push(slide);
   });
 
   //adding final chapter
@@ -40,7 +44,11 @@ const OverviewSection = props => {
   return (
     <div className="overview-section">
       {slides ? (
-        <ChapterContainer chapters={chapters} {...props} />
+        <ChapterContainer
+          chapters={chapters}
+          chapterWithSelectedSlide={chapterWithSelectedSlide}
+          {...props}
+        />
       ) : (
         <span key="default">NO SLIDES FOUND</span>
       )}

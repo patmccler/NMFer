@@ -6,17 +6,22 @@ const Chapter = props => {
   let slidesToDisplay = [];
 
   if (props.slides) {
+    //TODO use separate renderslide method
     props.slides.map(slide => {
       let index = slide.index;
-      slidesToDisplay.push(
-        <SlideThumb
-          selected={props.selectedSlide === index ? true : false}
-          index={index}
-          slide={slide}
-          onClick={() => props.handleThumbClick(index)}
-          key={index}
-        />
-      );
+      let selected = props.selectedSlide === index;
+
+      let theseProps = {
+        selected,
+        index,
+        slide,
+        onClick: () => props.handleThumbClick(index)
+      };
+      if (selected) {
+        theseProps.selectedSlideRef = props.selectedSlideRef;
+      }
+
+      slidesToDisplay.push(<SlideThumb {...theseProps} key={index} />);
     });
   } else {
     slidesToDisplay = [<span key="default">NO SLIDES FOUND</span>];
