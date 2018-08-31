@@ -12,7 +12,8 @@ class ChapterContainer extends Component {
     this.activeSlide = React.createRef();
 
     this.scrollActiveSlide = () => {
-      this.activeSlide.scrollIntoView();
+      if (this.activeSlide.current && !checkVisible(this.activeSlide.current))
+        this.activeSlide.current.scrollIntoView({ behavior: "smooth" });
     };
 
     this.state = {
@@ -35,9 +36,7 @@ class ChapterContainer extends Component {
 
     if (prevProps.selectedSlide != this.props.selectedSlide) {
       console.log("New selected Slide");
-      console.log(this.activeSlide);
-      if (!checkVisible(this.activeSlide.current))
-        this.activeSlide.current.scrollIntoView();
+      this.forceUpdate(this.scrollActiveSlide);
     }
   }
 
@@ -51,7 +50,6 @@ class ChapterContainer extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="chapterContainer">
         {this.props.chapters.map((chapter, index) => (
@@ -77,8 +75,7 @@ function checkVisible(elm) {
     document.documentElement.clientHeight,
     window.innerHeight
   );
-  console.log(`viewHeight: ${viewHeight}`);
-  console.log(`top: ${rect.top}, bot: ${rect.bottom}`);
+
   return !(rect.bottom > viewHeight || rect.top <= 0);
 }
 

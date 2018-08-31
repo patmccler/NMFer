@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import SlideThumb from "./SlideThumb.js";
 
 const Chapter = props => {
-  console.log(props);
   let slidesToDisplay = [];
 
   if (props.slides) {
