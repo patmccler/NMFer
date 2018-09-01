@@ -168,3 +168,18 @@ body * {
   overflow: hidden;
   height: 0;
 }
+
+/*Landing Page-----------------------*/
+.progress-bar-holder {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-items: flex-start;
+  width: 50%;
+  height: 100px;
+}
+
+.progress-bar-piece {
+  background: blue;
+  margin: 1px;
+}

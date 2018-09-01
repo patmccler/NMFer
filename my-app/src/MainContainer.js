@@ -1,14 +1,6 @@
 import React, { Component } from "react";
 import Main from "./Main.js";
-
-var FilePicker = props => {
-  return (
-    <div>
-      <input type="file" id="input-file" />
-      <button onClick={props.onClick}>Select File</button>
-    </div>
-  );
-};
+import LandingPage from "./LandingPage.js";
 
 class MainContainer extends Component {
   constructor(props) {
@@ -16,6 +8,9 @@ class MainContainer extends Component {
     this.state = {
       displayableSlides: null
     };
+
+    this.filePicker = React.createRef();
+
     this.unpackFile = this.unpackFile.bind(this);
     this.getFile = this.getFile.bind(this);
   }
@@ -24,12 +19,12 @@ class MainContainer extends Component {
     return this.state.displayableSlides ? (
       <Main {...this.props} slides={this.state.displayableSlides} />
     ) : (
-      <FilePicker onClick={this.getFile} />
+      <LandingPage filePickerRef={this.filePicker} onClick={this.getFile} />
     );
   }
 
-  getFile = function getFile() {
-    var files = document.getElementById("input-file").files;
+  getFile = function getFile(filePickerElm) {
+    var files = this.filePicker.current.files;
 
     if (files[0]) {
       let fileName = files[0].name;
@@ -146,7 +141,6 @@ class MainContainer extends Component {
 
   //For a filename that is already a URL, leaves it as is and lets it be rendered that way
   //for Images, builds a URL for the corresponding "file" in the content object
-  //video is wip
   buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
     if (!content) {
       return;
