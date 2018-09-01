@@ -66,34 +66,41 @@ class MainContainer extends Component {
         console.log("zip file");
 
         window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
+          let loadCounter = {
+            filesLoaded: 0,
+            totalFiles: -1
+          };
           let totalFilesLoaded = 0;
           let slideContent = {};
           let slides;
           zipReader.getEntries(entries => {
+            loadCounter.totalFiles = entries.length;
             entries.map(entry => {
               let fileName = entry.filename;
-              if (fileName.includes("__") || fileName.includes("/.")) return; //zip seems to include __MACOX/each file .. dunno
 
               if (fileName.includes("manifest.json")) {
                 entry.getData(new window.zip.TextWriter(), file => {
+                  loadCounter.filesLoaded++;
                   slides = JSON.parse(file).slides;
                 });
-              } else if (/content\/./i.test(fileName)) {
+              } else if (/^content\/./i.test(fileName)) {
                 entry.getData(new window.zip.BlobWriter(), file => {
-                  totalFilesLoaded += 1;
+                  loadCounter.filesLoaded++;
                   slideContent[fileName] = file;
-                  console.log(slideContent);
-                  console.log(totalFilesLoaded);
-
-                  if (slides && slides.length == totalFilesLoaded) {
-                    this.showSlides(slides, slideContent);
-                  }
                 });
+              } else {
+                //dont need to read the files we aren't interested in
+                loadCounter.filesLoaded++;
               }
             });
           });
 
-          console.log(zipReader);
+          checkFilesReady(loadCounter, () => {
+            this.showSlides(slides, slideContent);
+            zipReader.close(() =>
+              console.log("zipReader closed and webworkers destroyed")
+            );
+          });
         });
         break;
 
@@ -103,6 +110,7 @@ class MainContainer extends Component {
   };
 
   showSlides(slides, content) {
+    console.log("Showing slides");
     let displayableSlides = this.getUpdatedDisplayableSlides(slides, content);
 
     if (displayableSlides) {
@@ -118,15 +126,10 @@ class MainContainer extends Component {
     if (!slides || !content) {
       return false;
     }
-
-    console.log("Updating display slides");
-
     let displayableSlides = [];
     let error = false;
 
     slides.map(slide => {
-      console.log(slide);
-      console.log(content);
       let displayableSlide = this.buildDisplayableSlide(
         slide,
         content[slide.content_file_name]
@@ -176,4 +179,16 @@ class MainContainer extends Component {
     return newSlide;
   };
 }
+
+function checkFilesReady(counter, callBack) {
+  console.log(
+    `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
+  );
+  if (counter.filesLoaded === counter.totalFiles) {
+    callBack();
+  } else {
+    setTimeout(checkFilesReady, 500, counter, callBack);
+  }
+}
+
 export default MainContainer;
