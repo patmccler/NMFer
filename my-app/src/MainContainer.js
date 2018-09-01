@@ -23,7 +23,7 @@ class MainContainer extends Component {
     );
   }
 
-  getFile = function getFile(filePickerElm) {
+  getFile = function getFile() {
     var files = this.filePicker.current.files;
 
     if (files[0]) {
@@ -60,6 +60,7 @@ class MainContainer extends Component {
         }
         console.log("zip file");
 
+        //TODO Replace zipReader=> with function that takes zipreader as arg?`this` may be wrong
         window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
           let loadCounter = {
             filesLoaded: 0,
@@ -68,6 +69,7 @@ class MainContainer extends Component {
           let totalFilesLoaded = 0;
           let slideContent = {};
           let slides;
+
           zipReader.getEntries(entries => {
             loadCounter.totalFiles = entries.length;
             entries.map(entry => {
@@ -106,7 +108,7 @@ class MainContainer extends Component {
 
   showSlides(slides, content) {
     console.log("Showing slides");
-    let displayableSlides = this.getUpdatedDisplayableSlides(slides, content);
+    let displayableSlides = getUpdatedDisplayableSlides(slides, content);
 
     if (displayableSlides) {
       this.setState((prevState, props) => {
@@ -116,63 +118,66 @@ class MainContainer extends Component {
       });
     }
   }
+} //END OF COMPONENT
 
-  getUpdatedDisplayableSlides = function updateDisplaySlides(slides, content) {
-    if (!slides || !content) {
-      return false;
+//checks if new slides are ready... this may be able to go away
+//maybe move these functions out to a separate file for validation?
+const getUpdatedDisplayableSlides = function updateDisplayableSlides(
+  slides,
+  content
+) {
+  if (!slides || !content) {
+    return false;
+  }
+  let displayableSlides = [];
+  let error = false;
+
+  slides.map(slide => {
+    let displayableSlide = buildDisplayableSlide(
+      slide,
+      content[slide.content_file_name]
+    );
+    if (!displayableSlide) {
+      error = true;
+    } else {
+      displayableSlides.push(displayableSlide);
     }
-    let displayableSlides = [];
-    let error = false;
+  }, this);
 
-    slides.map(slide => {
-      let displayableSlide = this.buildDisplayableSlide(
-        slide,
-        content[slide.content_file_name]
-      );
-      if (!displayableSlide) {
-        error = true;
-      } else {
-        displayableSlides.push(displayableSlide);
+  return error ? false : displayableSlides;
+};
+
+//For a filename that is already a URL, leaves it as is and lets it be rendered that way
+//for Images, builds a URL for the corresponding "file" in the content object
+const buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
+  if (!content) {
+    return;
+  }
+
+  let newSlide = Object.assign({}, slide);
+
+  switch (slide.slide_type) {
+    //ASSUMES JPG FOR NOW
+    //NEED TO CHECK TYPE OF IMAGE HERE EVENTUALLY
+    case "image":
+      if (newSlide.content_file_name.includes("content/")) {
+        let image = new Blob([content], { type: "image/jpeg" });
+        newSlide.source_path = URL.createObjectURL(image);
       }
-    }, this);
+      break;
+    case "video":
+      if (newSlide.content_file_name.includes("content/")) {
+        console.log(content);
+        let video = content; //new Blob([content], { type: "video/mp4" });
+        newSlide.source_path = URL.createObjectURL(video);
+      }
+      break;
 
-    return error ? false : displayableSlides;
-  };
-
-  //For a filename that is already a URL, leaves it as is and lets it be rendered that way
-  //for Images, builds a URL for the corresponding "file" in the content object
-  buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
-    if (!content) {
-      return;
-    }
-
-    let newSlide = Object.assign({}, slide);
-
-    switch (slide.slide_type) {
-      //ASSUMES JPG FOR NOW
-      //NEED TO CHECK TYPE OF IMAGE HERE EVENTUALLY
-      case "image":
-        if (newSlide.content_file_name.includes("content/")) {
-          let image = new Blob([content], { type: "image/jpeg" });
-          newSlide.source_path = URL.createObjectURL(image);
-        }
-        break;
-      case "video":
-        if (newSlide.content_file_name.includes("content/")) {
-          console.log(content);
-          let video = content; //new Blob([content], { type: "video/mp4" });
-          newSlide.source_path = URL.createObjectURL(video);
-        }
-        break;
-
-      default:
-        console.log(
-          "unsupported slide type for slide" + slide.content_file_name
-        );
-    }
-    return newSlide;
-  };
-}
+    default:
+      console.log("unsupported slide type for slide" + slide.content_file_name);
+  }
+  return newSlide;
+};
 
 function checkFilesReady(counter, callBack) {
   console.log(
