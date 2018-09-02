@@ -9,7 +9,7 @@ class Main extends Component {
     this.state = {
       selectedSlideIndex: props.initialSlide
     };
-    this.handleOverviewClick = this.handleOverviewClick.bind(this);
+    this.handleSlideChangeClick = this.handleSlideChangeClick.bind(this);
   }
   render() {
     let selectedSlideIndex = this.state.selectedSlideIndex;
@@ -22,13 +22,13 @@ class Main extends Component {
         className={"main " + this.props.layout}
       >
         <OverviewSection
-          handleThumbClick={this.handleOverviewClick}
+          handleThumbClick={this.handleSlideChangeClick}
           slides={this.props.slides}
           selectedSlide={selectedSlideIndex}
         />
         <SlideViewer
           layout={this.props.layout}
-          onClick={this.handleOverviewClick}
+          buttonOnClick={this.handleSlideChangeClick}
           slideIndex={selectedSlideIndex}
           slide={this.props.slides[selectedSlideIndex]}
         />
@@ -36,7 +36,8 @@ class Main extends Component {
     );
   }
 
-  handleOverviewClick(i) {
+  //Sets the next slide to display, and checks that its in range
+  handleSlideChangeClick(i) {
     if (i >= this.props.slides.length || i < 0) {
       return;
     }

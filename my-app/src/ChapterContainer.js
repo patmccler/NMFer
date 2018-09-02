@@ -50,18 +50,24 @@ class ChapterContainer extends Component {
   }
 
   render() {
+    let chapterProps = {
+      selectedSlide: this.props.selectedSlide,
+      handleThumbClick: this.props.handleThumbClick
+    };
     return (
       <div className="chapterContainer">
         {this.props.chapters.map((chapter, index) => (
           <Chapter
-            selectedSlideRef={this.activeSlide}
-            selectedSlide={this.props.selectedSlide}
-            isHidden={this.state.chapterHideState[index]}
-            slides={chapter.slides}
-            title={chapter.title}
-            key={index}
-            handleThumbClick={this.props.handleThumbClick}
+            {...chapterProps}
+            {...chapter}
             onChapterTitleClick={() => this.handleChapterTitleClick(index)}
+            selectedSlideRef={
+              this.props.chapterWithSelectedSlide === index
+                ? this.activeSlide
+                : ""
+            }
+            isHidden={this.state.chapterHideState[index]}
+            key={index}
           />
         ))}
       </div>
