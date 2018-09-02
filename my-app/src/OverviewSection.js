@@ -3,9 +3,8 @@ import SlideThumb from "./SlideThumb.js";
 import ChapterContainer from "./ChapterContainer.js";
 
 const OverviewSection = props => {
-  console.log(props);
-  const chapterProps = {
-    onClick: props.onClick,
+  const chapterContainerProps = {
+    handleThumbClick: props.handleThumbClick,
     selectedSlide: props.selectedSlide
   };
   //the slides
@@ -20,7 +19,8 @@ const OverviewSection = props => {
   let chapters = [];
   let chapterWithSelectedSlide;
 
-  slides.map((slide, index) => {
+  //determines how the slides should be divided into chapters
+  slides.forEach((slide, index) => {
     slide.index = index;
     //if this slide has a chapter title, start a new chapter
     if (slide.chapter_title) {
@@ -47,7 +47,7 @@ const OverviewSection = props => {
         <ChapterContainer
           chapters={chapters}
           chapterWithSelectedSlide={chapterWithSelectedSlide}
-          {...props}
+          {...chapterContainerProps}
         />
       ) : (
         <span key="default">NO SLIDES FOUND</span>

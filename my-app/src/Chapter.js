@@ -10,17 +10,17 @@ const Chapter = props => {
       let index = slide.index;
       let selected = props.selectedSlide === index;
 
-      let theseProps = {
+      let slideProps = {
         selected,
         index,
         slide,
         onClick: () => props.handleThumbClick(index)
       };
       if (selected) {
-        theseProps.selectedSlideRef = props.selectedSlideRef;
+        slideProps.selectedSlideRef = props.selectedSlideRef;
       }
 
-      slidesToDisplay.push(<SlideThumb {...theseProps} key={index} />);
+      slidesToDisplay.push(<SlideThumb {...slideProps} key={index} />);
     });
   } else {
     slidesToDisplay = [<span key="default">NO SLIDES FOUND</span>];

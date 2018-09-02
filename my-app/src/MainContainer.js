@@ -1,83 +1,34 @@
 import React, { Component } from "react";
 import Main from "./Main.js";
-
-var FilePicker = props => {
-  return (
-    <div>
-      <input type="file" id="input-file" />
-      <button onClick={props.onClick}>Select File</button>
-    </div>
-  );
-};
+import LandingPage from "./LandingPage.js";
 
 class MainContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: {},
-      slides: null,
-      displayableSlides: null
+      displayableSlides: null,
+      filesLoaded: 0,
+      totalFiles: -1
     };
-    this.unpackFile = this.unpackFile.bind(this);
+
+    this.filePicker = React.createRef();
+
     this.getFile = this.getFile.bind(this);
-  }
-  //   render() {
-  //     return <Main {...this.props} />;
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.state.slides === prevState.slides &&
-      !(this.state.content === prevState.content)
-    ) {
-      console.log("No change in didupdate");
-
-      return;
-    }
-
-    //Works, needs cleanup probably
-    let newSlides = this.getUpdatedDisplayableSlides(
-      this.state.slides,
-      this.state.content
-    );
-
-    //if there are no new slides stop
-    if (
-      !newSlides ||
-      (this.state.displayableSlides &&
-        newSlides.count === this.state.displayableSlides.count)
-    ) {
-      console.log("No update needed/ready");
-
-      return;
-    }
-
-    console.log(newSlides);
-    this.setState((prevState, props) => {
-      return {
-        displayableSlides: newSlides
-      };
-    });
+    this.unpackFile = this.unpackFile.bind(this);
+    this.readZipReaderContents = this.readZipReaderContents.bind(this);
+    this.checkFilesReady = this.checkFilesReady.bind(this);
   }
 
   render() {
-    //TODO pull slides and content out and process before sending data down to subcomponents
-    //just send src url and slide info
-    // slides={this.state.slides}
-    //content={this.state.content}
     return this.state.displayableSlides ? (
-      <Main
-        width={this.props.width}
-        height={this.props.height}
-        layout={this.props.layout}
-        slides={this.state.displayableSlides}
-      />
+      <Main {...this.props} slides={this.state.displayableSlides} />
     ) : (
-      <FilePicker onClick={this.getFile} />
+      <LandingPage filePickerRef={this.filePicker} onClick={this.getFile} />
     );
   }
 
   getFile = function getFile() {
-    var files = document.getElementById("input-file").files;
+    var files = this.filePicker.current.files;
 
     if (files[0]) {
       let fileName = files[0].name;
@@ -90,23 +41,11 @@ class MainContainer extends Component {
   unpackFile = (file, fileName) => {
     let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
 
-    console.log(fileName);
-    console.log(file);
-
     switch (fileExtension) {
       case "json":
-        console.log("Parsing JSON");
-        console.log(file);
-        var fr = new FileReader();
-
-        fr.onload = e => {
-          var file = fr.result;
-          console.log(fr.result);
-
-          this.setState({ slides: JSON.parse(fr.result).slides });
-        };
-
-        fr.readAsText(file);
+        readJSONOnlyFile(file, result => {
+          this.showSlides(result.slides);
+        });
         break;
 
       case "nmf":
@@ -116,103 +55,125 @@ class MainContainer extends Component {
         }
         console.log("zip file");
 
-        window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
-          zipReader.getEntries(entries => {
-            console.log(entries);
-
-            entries.map(entry => {
-              let fileName = entry.filename;
-              if (fileName.includes("__") || fileName.includes("/.")) return; //zip seems to include __MACOX/each file .. dunno
-
-              if (fileName.includes("manifest.json")) {
-                console.log(entry);
-                entry.getData(new window.zip.TextWriter(), file => {
-                  console.log(file);
-                  this.setState({ slides: JSON.parse(file).slides });
-                });
-              } else if (fileName.includes("content")) {
-                entry.getData(new window.zip.BlobWriter(), file => {
-                  console.log(entry);
-                  this.setState((prevState, props) => {
-                    let content = prevState.content;
-                    content[fileName] = file;
-                    console.log(content);
-                    return { content };
-                  });
-                });
-              }
-            });
-          });
-
-          console.log(zipReader);
-        });
+        window.zip.createReader(
+          new window.zip.BlobReader(file),
+          this.readZipReaderContents
+        );
         break;
 
       default:
         console.log("unsupported file type");
     }
   };
+  //This could still probably be broken up more, but "this" makes it awkward...
+  readZipReaderContents(zipReader) {
+    let loadCounter = {
+      filesLoaded: 0,
+      totalFiles: -1
+    };
+    let slideContent = {};
+    let slides;
 
-  getUpdatedDisplayableSlides = function updateDisplaySlides(slides, content) {
-    if (!slides || !content) {
-      return false;
-    }
+    zipReader.getEntries(entries => {
+      loadCounter.totalFiles = entries.length;
 
-    console.log("Updating display slides");
+      entries.forEach(entry => {
+        let fileName = entry.filename;
 
-    let displayableSlides = [];
-    let error = false;
+        if (fileName.includes("manifest.json")) {
+          entry.getData(new window.zip.TextWriter(), file => {
+            loadCounter.filesLoaded++;
+            slides = JSON.parse(file).slides;
+          });
+        } else if (/^content\/./i.test(fileName)) {
+          //file was in content folder
+          entry.getData(new window.zip.BlobWriter(), file => {
+            loadCounter.filesLoaded++;
+            slideContent[fileName] = file;
+          });
+        } else {
+          //dont need to read the files we aren't interested in
+          loadCounter.filesLoaded++;
+        }
+      }); //end foreach entry
+    }); //end getEntries
 
-    slides.map(slide => {
-      console.log(slide);
-      console.log(content);
-      let displayableSlide = this.buildDisplayableSlide(
-        slide,
-        content[slide.content_file_name]
+    this.checkFilesReady(loadCounter, () => {
+      this.showSlides(slides, slideContent);
+      zipReader.close(() =>
+        console.log("zipReader closed and webworkers destroyed")
       );
-      if (!displayableSlide) {
-        error = true;
-      } else {
-        displayableSlides.push(displayableSlide);
-      }
-    }, this);
+    });
+  }
 
-    return error ? false : displayableSlides;
-  };
-
-  //For a filename that is already a URL, leaves it as is and lets it be rendered that way
-  //for Images, builds a URL for the corresponding "file" in the content object
-  //video is wip
-  buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
-    if (!content) {
-      return;
+  checkFilesReady(counter, callBack) {
+    console.log(
+      `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
+    );
+    if ((this.state.totalFiles = -1)) {
+      this.setState({ totalFiles: counter.totalFiles });
+    }
+    if (this.state.filesLoaded != counter.filesLoaded) {
+      this.setState({ filesLoaded: counter.filesLoaded });
     }
 
-    let newSlide = Object.assign({}, slide);
-
-    switch (slide.slide_type) {
-      //ASSUMES JPG FOR NOW
-      //NEED TO CHECK TYPE OF IMAGE HERE EVENTUALLY
-      case "image":
-        if (newSlide.content_file_name.includes("content/")) {
-          let image = new Blob([content], { type: "image/jpeg" });
-          newSlide.source_path = URL.createObjectURL(image);
-        }
-        break;
-      case "video":
-        if (newSlide.content_file_name.includes("content/")) {
-          console.log(content);
-          let video = content; //new Blob([content], { type: "video/mp4" });
-          newSlide.source_path = URL.createObjectURL(video);
-        }
-        break;
-
-      default:
-        console.log(
-          "unsupported slide type for slide" + slide.content_file_name
-        );
+    if (counter.filesLoaded === counter.totalFiles) {
+      callBack();
+    } else {
+      setTimeout(this.checkFilesReady, 500, counter, callBack);
     }
-    return newSlide;
+  }
+
+  showSlides(slides, content) {
+    //TODO good place to validate slides eventually.
+    console.log("Showing slides");
+    this.setState({
+      displayableSlides: buildSlides(slides, content)
+    });
+  }
+} //END OF COMPONENT
+
+const readJSONOnlyFile = function readFile(file, successCallBack) {
+  console.log("Parsing JSON");
+  var fr = new FileReader();
+
+  fr.onload = e => {
+    var file = fr.result;
+    successCallBack(JSON.parse(fr.result));
   };
-}
+
+  fr.readAsText(file);
+};
+
+/**
+ * Builds array of slides with the correct format to display later
+ * @param {array} slides - slides which need to use the content
+ * @param {array} content - array of blobs from zip file
+ */
+const buildSlides = function buildSlides(slides, content) {
+  console.log("building display slides");
+  if (!slides) {
+    return false;
+  }
+
+  //for the new "simple" nmf with urls as content
+  if (!content) {
+    return slides.map(slide => {
+      slide.source_path = slide.content_file_name;
+      return slide;
+    });
+  }
+  //for a more typical NMF where files are pointed at by content_file_name
+  let displayableSlides = slides.map(slide => {
+    let slideContent = content[slide.content_file_name];
+    let displayableSlide = Object.assign({}, slide);
+    displayableSlide.source_path = URL.createObjectURL(
+      content[slide.content_file_name]
+    );
+    return displayableSlide;
+  });
+
+  return displayableSlides;
+};
+
 export default MainContainer;

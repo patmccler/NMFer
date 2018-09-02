@@ -6,11 +6,11 @@ const SlideViewer = props => {
 
   return (
     <div className="slide-viewer">
-      <SlideDetail slideNumber={props.slideNumber} slide={slide} />
+      <SlideDetail slideIndex={props.slideIndex} slide={slide} />
       <LargeView
         type={slide.slide_type}
-        slideNumber={props.slideNumber}
-        onClick={props.onClick}
+        slideIndex={props.slideIndex}
+        buttonOnClick={props.buttonOnClick}
         source={slide.source_path}
       />
     </div>
@@ -39,7 +39,7 @@ const SlideDetail = props => {
   return (
     <div className="slide-viewer-detail">
       <div className="slide-viewer-detail-header">
-        Slide Details for slide {props.slideNumber} <br />
+        Slide Details for slide {props.slideIndex + 1} <br />
       </div>
       <ul>{slideDetailsToDisplay}</ul>
     </div>
@@ -50,7 +50,7 @@ const LargeView = props => {
   return (
     <div className="image-viewer">
       <button
-        onClick={() => props.onClick(props.slideNumber - 2)}
+        onClick={() => props.buttonOnClick(props.slideIndex - 1)}
         className="image-viewer-side-button"
       >
         {"<"}
@@ -62,7 +62,7 @@ const LargeView = props => {
         <VideoView source={props.source} />
       )}
       <button
-        onClick={() => props.onClick(props.slideNumber)}
+        onClick={() => props.buttonOnClick(props.slideIndex + 1)}
         className="image-viewer-side-button"
       >
         {">"}
@@ -94,9 +94,5 @@ const ImageView = props => {
     </div>
   );
 };
-
-// //className="image-viewer-large-image"
-// src={props.image}
-// alt="MainImage"
 
 export default SlideViewer;
