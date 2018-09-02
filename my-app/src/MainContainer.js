@@ -126,6 +126,7 @@ const getUpdatedDisplayableSlides = function updateDisplayableSlides(
   slides,
   content
 ) {
+  console.log("building display slides");
   if (!slides || !content) {
     return false;
   }
@@ -133,10 +134,14 @@ const getUpdatedDisplayableSlides = function updateDisplayableSlides(
   let error = false;
 
   slides.map(slide => {
-    let displayableSlide = buildDisplayableSlide(
-      slide,
+    let displayableSlide = Object.assign({}, slide);
+    displayableSlide.source_path = URL.createObjectURL(
       content[slide.content_file_name]
     );
+    // buildDisplayableSlide(
+    //   slide,
+    //   content[slide.content_file_name]
+    // );
     if (!displayableSlide) {
       error = true;
     } else {
@@ -156,26 +161,7 @@ const buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
 
   let newSlide = Object.assign({}, slide);
 
-  switch (slide.slide_type) {
-    //ASSUMES JPG FOR NOW
-    //NEED TO CHECK TYPE OF IMAGE HERE EVENTUALLY
-    case "image":
-      if (newSlide.content_file_name.includes("content/")) {
-        let image = new Blob([content], { type: "image/jpeg" });
-        newSlide.source_path = URL.createObjectURL(image);
-      }
-      break;
-    case "video":
-      if (newSlide.content_file_name.includes("content/")) {
-        console.log(content);
-        let video = content; //new Blob([content], { type: "video/mp4" });
-        newSlide.source_path = URL.createObjectURL(video);
-      }
-      break;
-
-    default:
-      console.log("unsupported slide type for slide" + slide.content_file_name);
-  }
+  newSlide.source_path = URL.createObjectURL(content);
   return newSlide;
 };
 
