@@ -13,6 +13,7 @@ class MainContainer extends Component {
 
     this.unpackFile = this.unpackFile.bind(this);
     this.getFile = this.getFile.bind(this);
+    this.readZipReaderContents = this.readZipReaderContents.bind(this);
   }
 
   render() {
@@ -39,18 +40,9 @@ class MainContainer extends Component {
 
     switch (fileExtension) {
       case "json":
-        console.log("Parsing JSON");
-        console.log(file);
-        var fr = new FileReader();
-
-        fr.onload = e => {
-          var file = fr.result;
-          console.log(fr.result);
-
-          this.setState({ slides: JSON.parse(fr.result).slides });
-        };
-
-        fr.readAsText(file);
+        readJSONOnlyFile(file, result => {
+          this.showSlides(result.slides);
+        });
         break;
 
       case "nmf":
@@ -61,54 +53,60 @@ class MainContainer extends Component {
         console.log("zip file");
 
         //TODO Replace zipReader=> with function that takes zipreader as arg?`this` may be wrong
-        window.zip.createReader(new window.zip.BlobReader(file), zipReader => {
-          let loadCounter = {
-            filesLoaded: 0,
-            totalFiles: -1
-          };
-          let totalFilesLoaded = 0;
-          let slideContent = {};
-          let slides;
-
-          zipReader.getEntries(entries => {
-            loadCounter.totalFiles = entries.length;
-            entries.map(entry => {
-              let fileName = entry.filename;
-
-              if (fileName.includes("manifest.json")) {
-                entry.getData(new window.zip.TextWriter(), file => {
-                  loadCounter.filesLoaded++;
-                  slides = JSON.parse(file).slides;
-                });
-              } else if (/^content\/./i.test(fileName)) {
-                entry.getData(new window.zip.BlobWriter(), file => {
-                  loadCounter.filesLoaded++;
-                  slideContent[fileName] = file;
-                });
-              } else {
-                //dont need to read the files we aren't interested in
-                loadCounter.filesLoaded++;
-              }
-            });
-          });
-
-          checkFilesReady(loadCounter, () => {
-            this.showSlides(slides, slideContent);
-            zipReader.close(() =>
-              console.log("zipReader closed and webworkers destroyed")
-            );
-          });
-        });
+        console.log(this);
+        window.zip.createReader(
+          new window.zip.BlobReader(file),
+          this.readZipReaderContents
+        );
+        // /
         break;
 
       default:
         console.log("unsupported file type");
     }
   };
+  readZipReaderContents(zipReader) {
+    let loadCounter = {
+      filesLoaded: 0,
+      totalFiles: -1
+    };
+    let totalFilesLoaded = 0;
+    let slideContent = {};
+    let slides;
+
+    zipReader.getEntries(entries => {
+      loadCounter.totalFiles = entries.length;
+      entries.map(entry => {
+        let fileName = entry.filename;
+
+        if (fileName.includes("manifest.json")) {
+          entry.getData(new window.zip.TextWriter(), file => {
+            loadCounter.filesLoaded++;
+            slides = JSON.parse(file).slides;
+          });
+        } else if (/^content\/./i.test(fileName)) {
+          entry.getData(new window.zip.BlobWriter(), file => {
+            loadCounter.filesLoaded++;
+            slideContent[fileName] = file;
+          });
+        } else {
+          //dont need to read the files we aren't interested in
+          loadCounter.filesLoaded++;
+        }
+      });
+    });
+    console.log(this);
+    checkFilesReady(loadCounter, () => {
+      this.showSlides(slides, slideContent);
+      zipReader.close(() =>
+        console.log("zipReader closed and webworkers destroyed")
+      );
+    });
+  }
 
   showSlides(slides, content) {
     console.log("Showing slides");
-    let displayableSlides = getUpdatedDisplayableSlides(slides, content);
+    let displayableSlides = buildDisplayableSlides(slides, content);
 
     if (displayableSlides) {
       this.setState((prevState, props) => {
@@ -120,49 +118,50 @@ class MainContainer extends Component {
   }
 } //END OF COMPONENT
 
-//checks if new slides are ready... this may be able to go away
-//maybe move these functions out to a separate file for validation?
-const getUpdatedDisplayableSlides = function updateDisplayableSlides(
+const readJSONOnlyFile = function readFile(file, successCallBack) {
+  console.log("Parsing JSON");
+  var fr = new FileReader();
+
+  fr.onload = e => {
+    var file = fr.result;
+    successCallBack(JSON.parse(fr.result));
+  };
+
+  fr.readAsText(file);
+};
+
+/**
+ * Builds array of slides with the correct format to display later
+ * @param {array} slides - slides which need to use the content
+ * @param {array} content - array of blobs from zip file
+ */
+const buildDisplayableSlides = function buildDisplayableSlides(
   slides,
   content
 ) {
   console.log("building display slides");
-  if (!slides || !content) {
+  if (!slides) {
     return false;
   }
-  let displayableSlides = [];
-  let error = false;
 
-  slides.map(slide => {
+  //for the new "simple" nmf with urls as content
+  if (!content) {
+    return slides.map(slide => {
+      slide.source_path = slide.content_file_name;
+      return slide;
+    });
+  }
+  //for a more typical NMF where files are pointed at by content_file_name
+  let displayableSlides = slides.map(slide => {
+    let slideContent = content[slide.content_file_name];
     let displayableSlide = Object.assign({}, slide);
     displayableSlide.source_path = URL.createObjectURL(
       content[slide.content_file_name]
     );
-    // buildDisplayableSlide(
-    //   slide,
-    //   content[slide.content_file_name]
-    // );
-    if (!displayableSlide) {
-      error = true;
-    } else {
-      displayableSlides.push(displayableSlide);
-    }
-  }, this);
+    return displayableSlide;
+  });
 
-  return error ? false : displayableSlides;
-};
-
-//For a filename that is already a URL, leaves it as is and lets it be rendered that way
-//for Images, builds a URL for the corresponding "file" in the content object
-const buildDisplayableSlide = function buildDisplayableSlide(slide, content) {
-  if (!content) {
-    return;
-  }
-
-  let newSlide = Object.assign({}, slide);
-
-  newSlide.source_path = URL.createObjectURL(content);
-  return newSlide;
+  return displayableSlides;
 };
 
 function checkFilesReady(counter, callBack) {
