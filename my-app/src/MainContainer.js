@@ -13,10 +13,9 @@ class MainContainer extends Component {
 
     this.filePicker = React.createRef();
 
-    this.unpackFile = this.unpackFile.bind(this);
     this.getFile = this.getFile.bind(this);
+    this.unpackFile = this.unpackFile.bind(this);
     this.readZipReaderContents = this.readZipReaderContents.bind(this);
-    this.incrementLoadedCounter = this.incrementLoadedCounter.bind(this);
     this.checkFilesReady = this.checkFilesReady.bind(this);
   }
 
@@ -56,13 +55,10 @@ class MainContainer extends Component {
         }
         console.log("zip file");
 
-        //TODO Replace zipReader=> with function that takes zipreader as arg?`this` may be wrong
-        console.log(this);
         window.zip.createReader(
           new window.zip.BlobReader(file),
           this.readZipReaderContents
         );
-        // /
         break;
 
       default:
@@ -117,7 +113,8 @@ class MainContainer extends Component {
     if ((this.state.totalFiles = -1)) {
       this.setState({ totalFiles: counter.totalFiles });
     }
-    this.setState({ filesLoaded: counter.fliesLoaded });
+    this.setState({ filesLoaded: counter.filesLoaded });
+
     if (counter.filesLoaded === counter.totalFiles) {
       callBack();
     } else {
