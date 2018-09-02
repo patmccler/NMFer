@@ -6,7 +6,9 @@ class MainContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayableSlides: null
+      displayableSlides: null,
+      filesLoaded: 0,
+      totalFiles: -1
     };
 
     this.filePicker = React.createRef();
@@ -14,6 +16,8 @@ class MainContainer extends Component {
     this.unpackFile = this.unpackFile.bind(this);
     this.getFile = this.getFile.bind(this);
     this.readZipReaderContents = this.readZipReaderContents.bind(this);
+    this.incrementLoadedCounter = this.incrementLoadedCounter.bind(this);
+    this.checkFilesReady = this.checkFilesReady.bind(this);
   }
 
   render() {
@@ -65,17 +69,19 @@ class MainContainer extends Component {
         console.log("unsupported file type");
     }
   };
+  //This could still probably be broken up more, but "this" makes it awkward...
   readZipReaderContents(zipReader) {
     let loadCounter = {
       filesLoaded: 0,
       totalFiles: -1
     };
-    let totalFilesLoaded = 0;
+    //let totalFilesLoaded = 0;
     let slideContent = {};
     let slides;
 
     zipReader.getEntries(entries => {
       loadCounter.totalFiles = entries.length;
+
       entries.map(entry => {
         let fileName = entry.filename;
 
@@ -95,13 +101,28 @@ class MainContainer extends Component {
         }
       });
     });
-    console.log(this);
-    checkFilesReady(loadCounter, () => {
+
+    this.checkFilesReady(loadCounter, () => {
       this.showSlides(slides, slideContent);
       zipReader.close(() =>
         console.log("zipReader closed and webworkers destroyed")
       );
     });
+  }
+
+  checkFilesReady(counter, callBack) {
+    console.log(
+      `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
+    );
+    if ((this.state.totalFiles = -1)) {
+      this.setState({ totalFiles: counter.totalFiles });
+    }
+    this.setState({ filesLoaded: counter.fliesLoaded });
+    if (counter.filesLoaded === counter.totalFiles) {
+      callBack();
+    } else {
+      setTimeout(this.checkFilesReady, 500, counter, callBack);
+    }
   }
 
   showSlides(slides, content) {
@@ -164,15 +185,15 @@ const buildDisplayableSlides = function buildDisplayableSlides(
   return displayableSlides;
 };
 
-function checkFilesReady(counter, callBack) {
-  console.log(
-    `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
-  );
-  if (counter.filesLoaded === counter.totalFiles) {
-    callBack();
-  } else {
-    setTimeout(checkFilesReady, 500, counter, callBack);
-  }
-}
+// function checkFilesReady(counter, callBack) {
+//   console.log(
+//     `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
+//   );
+//   if (counter.filesLoaded === counter.totalFiles) {
+//     callBack();
+//   } else {
+//     setTimeout(checkFilesReady, 500, counter, callBack);
+//   }
+// }
 
 export default MainContainer;
