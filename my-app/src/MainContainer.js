@@ -71,14 +71,13 @@ class MainContainer extends Component {
       filesLoaded: 0,
       totalFiles: -1
     };
-    //let totalFilesLoaded = 0;
     let slideContent = {};
     let slides;
 
     zipReader.getEntries(entries => {
       loadCounter.totalFiles = entries.length;
 
-      entries.map(entry => {
+      entries.forEach(entry => {
         let fileName = entry.filename;
 
         if (fileName.includes("manifest.json")) {
@@ -87,6 +86,7 @@ class MainContainer extends Component {
             slides = JSON.parse(file).slides;
           });
         } else if (/^content\/./i.test(fileName)) {
+          //file was in content folder
           entry.getData(new window.zip.BlobWriter(), file => {
             loadCounter.filesLoaded++;
             slideContent[fileName] = file;
@@ -95,8 +95,8 @@ class MainContainer extends Component {
           //dont need to read the files we aren't interested in
           loadCounter.filesLoaded++;
         }
-      });
-    });
+      }); //end foreach entry
+    }); //end getEntries
 
     this.checkFilesReady(loadCounter, () => {
       this.showSlides(slides, slideContent);
@@ -113,7 +113,9 @@ class MainContainer extends Component {
     if ((this.state.totalFiles = -1)) {
       this.setState({ totalFiles: counter.totalFiles });
     }
-    this.setState({ filesLoaded: counter.filesLoaded });
+    if (this.state.filesLoaded != counter.filesLoaded) {
+      this.setState({ filesLoaded: counter.filesLoaded });
+    }
 
     if (counter.filesLoaded === counter.totalFiles) {
       callBack();
@@ -123,16 +125,11 @@ class MainContainer extends Component {
   }
 
   showSlides(slides, content) {
+    //TODO good place to validate slides eventually.
     console.log("Showing slides");
-    let displayableSlides = buildDisplayableSlides(slides, content);
-
-    if (displayableSlides) {
-      this.setState((prevState, props) => {
-        return {
-          displayableSlides
-        };
-      });
-    }
+    this.setState({
+      displayableSlides: buildSlides(slides, content)
+    });
   }
 } //END OF COMPONENT
 
@@ -153,10 +150,7 @@ const readJSONOnlyFile = function readFile(file, successCallBack) {
  * @param {array} slides - slides which need to use the content
  * @param {array} content - array of blobs from zip file
  */
-const buildDisplayableSlides = function buildDisplayableSlides(
-  slides,
-  content
-) {
+const buildSlides = function buildSlides(slides, content) {
   console.log("building display slides");
   if (!slides) {
     return false;
@@ -181,16 +175,5 @@ const buildDisplayableSlides = function buildDisplayableSlides(
 
   return displayableSlides;
 };
-
-// function checkFilesReady(counter, callBack) {
-//   console.log(
-//     `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
-//   );
-//   if (counter.filesLoaded === counter.totalFiles) {
-//     callBack();
-//   } else {
-//     setTimeout(checkFilesReady, 500, counter, callBack);
-//   }
-// }
 
 export default MainContainer;
