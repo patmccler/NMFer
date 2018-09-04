@@ -30,7 +30,6 @@ class Main extends Component {
         <SlideViewer
           layout={this.props.layout}
           buttonOnClick={this.handleSlideChangeClick}
-          slideIndex={selectedSlideIndex}
           slide={this.props.slides[selectedSlideIndex]}
         />
       </div>

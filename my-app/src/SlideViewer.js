@@ -9,7 +9,7 @@ const SlideViewer = props => {
   let slide = props.slide;
   let largeViewProps = {
     type: slide.slide_type,
-    slideIndex: props.slideIndex,
+    slideIndex: slide.index,
     buttonOnClick: props.buttonOnClick,
     source: slide.source_path
   };
@@ -24,7 +24,7 @@ const SlideViewer = props => {
 
   return (
     <div className="slide-viewer">
-      <SlideDetail slideIndex={props.slideIndex} slide={slide} />
+      <SlideDetail slide={slide} />
       <LargeView {...largeViewProps} />
     </div>
   );
