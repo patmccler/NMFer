@@ -10,6 +10,7 @@ class Main extends Component {
       selectedSlideIndex: props.initialSlide
     };
     this.handleSlideChangeClick = this.handleSlideChangeClick.bind(this);
+    this.findSlideIndexFromID = this.findSlideIndexFromID.bind(this);
   }
   render() {
     let selectedSlideIndex = this.state.selectedSlideIndex;
@@ -37,16 +38,41 @@ class Main extends Component {
   }
 
   //Sets the next slide to display, and checks that its in range
-  handleSlideChangeClick(i) {
-    if (i >= this.props.slides.length || i < 0) {
-      return;
+  handleSlideChangeClick(nextSlide) {
+    let slideIndex = -1;
+    //confirm that nextSlide is an int
+    if (typeof nextSlide == "number" && nextSlide == parseInt(nextSlide)) {
+      slideIndex = nextSlide;
+    } else if (typeof nextSlide == "string") {
+      slideIndex = this.findSlideIndexFromID(nextSlide);
     }
 
-    // let slides = this.state.slides;
+    //if sl
+    if (slideIndex >= this.props.slides.length || slideIndex < 0) {
+      return;
+    }
     this.setState({
-      selectedSlideIndex: i
+      selectedSlideIndex: slideIndex
     });
+
+    // let slides = this.state.slides;
   }
+
+  /**
+   * Finds the corresponding index for the slide with the given ID
+   * Returns -1 if none found
+   * @slideID - unique string to identify slide
+   */
+  findSlideIndexFromID = function findSlideIndexFromID(slideID) {
+    let index = -1;
+    let slide = this.props.slides.find(slide => {
+      return slide.id === slideID;
+    });
+    if (slide) {
+      index = slide.index;
+    }
+    return index;
+  };
 }
 
 Main.defaultProps = {

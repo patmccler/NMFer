@@ -4,7 +4,9 @@ const LargeView = props => {
   return (
     <div className="image-viewer">
       <button
-        onClick={() => props.buttonOnClick(props.slideIndex - 1)}
+        onClick={() =>
+          props.buttonOnClick(props.prev_slide || props.slideIndex - 1)
+        }
         className="image-viewer-side-button"
       >
         {"<"}
@@ -16,7 +18,9 @@ const LargeView = props => {
         <VideoView source={props.source} />
       )}
       <button
-        onClick={() => props.buttonOnClick(props.slideIndex + 1)}
+        onClick={() =>
+          props.buttonOnClick(props.next_slide || props.slideIndex + 1)
+        }
         className="image-viewer-side-button"
       >
         {">"}
