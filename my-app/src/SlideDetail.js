@@ -24,7 +24,7 @@ const SlideDetail = props => {
   return (
     <div className="slide-viewer-detail">
       <div className="slide-viewer-detail-header">
-        Slide Details for slide {props.slideIndex + 1} <br />
+        Slide Details for slide {props.slide.index + 1} <br />
       </div>
       <ul>{slideDetailsToDisplay}</ul>
     </div>
