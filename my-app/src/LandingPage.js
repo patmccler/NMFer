@@ -4,7 +4,7 @@ var FilePicker = props => {
   return (
     <div>
       <input ref={props.filePickerRef} type="file" id="input-file" />
-      <button onClick={props.onClick}>Select File</button>
+      <button onClick={props.handleFileClick}>Select File</button>
     </div>
   );
 };

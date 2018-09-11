@@ -23,7 +23,10 @@ class MainContainer extends Component {
     return this.state.displayableSlides ? (
       <Main {...this.props} slides={this.state.displayableSlides} />
     ) : (
-      <LandingPage filePickerRef={this.filePicker} onClick={this.getFile} />
+      <LandingPage
+        filePickerRef={this.filePicker}
+        handleFileClick={this.getFile}
+      />
     );
   }
 
