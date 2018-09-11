@@ -11,8 +11,6 @@ class App extends Component {
     this.state = {
       //  slides: dummyNMF.slides,
       configs: {
-        width: window.innerWidth,
-        height: window.innerHeight,
         layout: "wide"
       },
       resizeTimeout: null
@@ -57,13 +55,12 @@ class App extends Component {
     console.log("handle resize");
     this.setState({
       configs: {
-        height,
-        width,
         layout
       }
     });
   };
 
+  //TODO this math needs checking - seems off
   determineLayout = function determineLayout(width, height) {
     //2 side panel layout - wide
     let imageWidth =

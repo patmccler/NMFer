@@ -15,13 +15,7 @@ class Main extends Component {
   render() {
     let selectedSlideIndex = this.state.selectedSlideIndex;
     return (
-      <div
-        style={{
-          width: this.props.width,
-          height: this.props.height
-        }}
-        className={"main " + this.props.layout}
-      >
+      <div className={"main " + this.props.layout}>
         <OverviewSection
           handleThumbClick={this.handleSlideChangeClick}
           slides={this.props.slides}
