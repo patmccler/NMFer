@@ -11,8 +11,6 @@ class App extends Component {
     this.state = {
       //  slides: dummyNMF.slides,
       configs: {
-        width: window.innerWidth,
-        height: window.innerHeight,
         layout: "wide"
       },
       resizeTimeout: null
@@ -57,13 +55,13 @@ class App extends Component {
     console.log("handle resize");
     this.setState({
       configs: {
-        height,
-        width,
         layout
       }
     });
   };
 
+  //TODO this math needs checking - seems off
+  //maybe its okay - not so much checking if image will be wider, but transition when detail starts to overlap
   determineLayout = function determineLayout(width, height) {
     //2 side panel layout - wide
     let imageWidth =
