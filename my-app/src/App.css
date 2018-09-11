@@ -10,10 +10,13 @@ body * {
   overflow: hidden;
 }
 
-.main {
-  position: relative;
+.App > div {
   width: 100vw;
   height: 100vh;
+}
+
+.main {
+  position: relative;
 }
 
 /* Image Viewer---------------------------------------*/
@@ -173,13 +176,31 @@ body * {
 }
 
 /*Landing Page-----------------------*/
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  background: rgb(5, 44, 66);
+}
+
+.landing-page > div {
+  border: 5px solid rgb(44, 43, 43);
+  flex-basis: 75%;
+  background: rgb(56, 89, 126);
+}
+
+.file-picker {
+  padding: 15px;
+  font-size: 20px;
+}
+
 .progress-bar-holder {
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  justify-items: flex-start;
-  width: 50%;
-  height: 100px;
+  justify-content: space-around;
 }
 
 .progress-bar-piece {

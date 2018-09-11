@@ -26,6 +26,8 @@ class MainContainer extends Component {
       <LandingPage
         filePickerRef={this.filePicker}
         handleFileClick={this.getFile}
+        filesLoaded={this.state.filesLoaded}
+        totalFiles={this.state.totalFiles}
       />
     );
   }
