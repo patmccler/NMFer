@@ -37,7 +37,6 @@ class MainContainer extends Component {
     }
   };
 
-  //TODO Separate these out to individual functions
   unpackFile = (file, fileName) => {
     let fileExtension = /(?:\.([^.]+))?$/.exec(fileName)[1].toLowerCase();
 
