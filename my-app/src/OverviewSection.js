@@ -8,10 +8,8 @@ const OverviewSection = props => {
     selectedSlide: props.selectedSlide
   };
   //the slides
-  let slides = props.slides;
-  if (!slides) {
-    return;
-  }
+  let slides = props.slides ? props.slides : [];
+
   //array to hold slides until a whole chapter is determined
   let currentChapter = [];
   let currentChapterTitle = "";
@@ -43,14 +41,14 @@ const OverviewSection = props => {
 
   return (
     <div className="overview-section">
-      {slides ? (
+      {slides.length > 0 ? (
         <ChapterContainer
           chapters={chapters}
           chapterWithSelectedSlide={chapterWithSelectedSlide}
           {...chapterContainerProps}
         />
       ) : (
-        <span key="default">NO SLIDES FOUND</span>
+        <span key="default">LOAD SOMETHING!</span>
       )}
     </div>
   );

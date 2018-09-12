@@ -1,8 +1,10 @@
 import React from "react";
+import OverviewSection from "./OverviewSection";
 
+//TODO Style this better
 var FilePicker = props => {
   return (
-    <div className="file-picker">
+    <div className="slide-viewer file-picker">
       <input ref={props.filePickerRef} type="file" />
       <button onClick={props.handleFileClick}>Select File</button>
     </div>
@@ -12,20 +14,22 @@ var FilePicker = props => {
 var ProgressBar = props => {
   let progress = props.progressPercent;
   return (
-    <div className="progress-bar-holder">
+    <div className="slide-viewer progress-bar-holder">
       <div>{`${props.filesLoaded} of ${props.totalFiles} loaded`}</div>
     </div>
   );
 };
 
 var LandingPage = props => {
-  return (
-    <div className="landing-page">
-      {props.totalFiles < 0 ? (
-        <FilePicker {...props} />
-      ) : (
-        <ProgressBar {...props} />
-      )}
+  return props.totalFiles < 0 ? (
+    <div className="main landing-page">
+      <OverviewSection />
+      <FilePicker {...props} />
+    </div>
+  ) : (
+    <div className="main landing-page">
+      <OverviewSection />
+      <ProgressBar {...props} />
     </div>
   );
 };
