@@ -32,8 +32,19 @@ var FilePicker = props => {
 var ProgressBar = props => {
   let progress = props.progressPercent;
   return (
-    <div className="slide-viewer progress-bar-holder">
-      <div>{`${props.filesLoaded} of ${props.totalFiles} loaded`}</div>
+    <div className="slide-viewer progress-section">
+      <div className="loaded-files-label">
+        {`${props.filesLoaded} of ${props.totalFiles} loaded`}
+      </div>
+      <div className="progress-bar-total">
+        <div
+          style={{
+            width:
+              Math.floor((props.filesLoaded / props.totalFiles) * 100) + "%"
+          }}
+          className="progress-bar-percent"
+        />
+      </div>
     </div>
   );
 };

@@ -203,16 +203,31 @@ body * {
   border: 2px white solid;
 }
 
-.progress-bar-holder {
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.loaded-files-label {
+  font-size: 1.25em;
+  font-weight: 700;
+  padding: 5px;
+  color: white;
 }
 
-.progress-bar-piece {
-  background: blue;
-  margin: 1px;
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-bar-total {
+  position: relative;
+  height: 50px;
+  width: 80%;
+  background: rgb(240, 243, 245);
+}
+
+.progress-bar-percent {
+  height: 100%;
+  background: rgb(68, 248, 194);
+  transition: width 0.2s ease-in;
 }
 
 /* Input Label and button hiding --------------*/
