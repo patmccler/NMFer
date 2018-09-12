@@ -194,13 +194,12 @@ body * {
   font-size: 20px;
 }
 
-.file-picker > button {
-  width: 50px;
-  height: 50px;
-}
-
-.file-picker > input {
-  width: 300px;
+.file-picker > button,
+.file-picker > label {
+  font-size: 1.25em;
+  font-weight: 700;
+  padding: 5px;
+  border: 2px white solid;
 }
 
 .progress-bar-holder {
@@ -213,4 +212,32 @@ body * {
 .progress-bar-piece {
   background: blue;
   margin: 1px;
+}
+
+/* Input Label and button hiding --------------*/
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  color: white;
+  background-color: rgb(2, 76, 187);
+  border: 2px white solid;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: rgb(9, 255, 255);
+}
+
+.hidden {
+  display: none;
 }
