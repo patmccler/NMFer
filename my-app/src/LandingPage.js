@@ -46,9 +46,11 @@ class LandingPage extends Component {
   }
 
   filePickerChanged() {
-    console.log(this.props.filePickerRef.current.files[0].name);
+    let file = this.props.filePickerRef.current.files[0];
+    let fileName = file ? file.name : null;
+
     this.setState({
-      chosenFile: this.props.filePickerRef.current.files[0].name
+      chosenFile: fileName
     });
   }
 

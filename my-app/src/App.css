@@ -140,6 +140,7 @@ body * {
 
   flex-direction: column;
   background-color: #002266;
+  color: white;
 }
 
 .overview-slide-thumb {
