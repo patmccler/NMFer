@@ -35,13 +35,11 @@ class ChapterContainer extends Component {
     }
 
     if (prevProps.selectedSlide != this.props.selectedSlide) {
-      console.log("New selected Slide");
       this.forceUpdate(this.scrollActiveSlide);
     }
   }
 
   handleChapterTitleClick(i) {
-    console.log("Toggling Chapter " + (i + 1) + " hidden");
     this.setState((prevState, props) => {
       let newChapterHideState = prevState.chapterHideState;
       newChapterHideState[i] = !newChapterHideState[i];

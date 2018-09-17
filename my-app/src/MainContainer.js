@@ -111,9 +111,6 @@ class MainContainer extends Component {
   }
 
   checkFilesReady(counter, callBack) {
-    console.log(
-      `filesReady: ${counter.filesLoaded}, totalFiles: ${counter.totalFiles}`
-    );
     if ((this.state.totalFiles = -1)) {
       this.setState({ totalFiles: counter.totalFiles });
     }
@@ -155,7 +152,6 @@ const readJSONOnlyFile = function readFile(file, successCallBack) {
  * @param {array} content - array of blobs from zip file
  */
 const buildSlides = function buildSlides(slides, content) {
-  console.log("building display slides");
   if (!slides) {
     return false;
   }
