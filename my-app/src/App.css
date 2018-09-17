@@ -10,10 +10,13 @@ body * {
   overflow: hidden;
 }
 
-.main {
-  position: relative;
+.App > div {
   width: 100vw;
   height: 100vh;
+}
+
+.main {
+  position: relative;
 }
 
 /* Image Viewer---------------------------------------*/
@@ -137,6 +140,7 @@ body * {
 
   flex-direction: column;
   background-color: #002266;
+  color: white;
 }
 
 .overview-slide-thumb {
@@ -173,16 +177,83 @@ body * {
 }
 
 /*Landing Page-----------------------*/
-.progress-bar-holder {
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-items: flex-start;
-  width: 50%;
-  height: 100px;
+
+.landing-page {
+  background: rgb(5, 44, 66);
 }
 
-.progress-bar-piece {
-  background: blue;
-  margin: 1px;
+.landing-page > .slide-viewer {
+  background: rgb(56, 89, 126);
+}
+
+.landing-page > .overview-section {
+  width: 200px;
+}
+
+.file-picker {
+  padding: 15px;
+  font-size: 20px;
+}
+
+.file-picker > button,
+.file-picker > label {
+  font-size: 1.25em;
+  font-weight: 700;
+  padding: 5px;
+  border: 2px white solid;
+}
+
+.loaded-files-label {
+  font-size: 1.25em;
+  font-weight: 700;
+  padding: 5px;
+  color: white;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-bar-total {
+  position: relative;
+  height: 50px;
+  width: 80%;
+  background: rgb(240, 243, 245);
+}
+
+.progress-bar-percent {
+  height: 100%;
+  background: rgb(68, 248, 194);
+  transition: width 0.2s ease-in;
+}
+
+/* Input Label and button hiding --------------*/
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  color: white;
+  background-color: rgb(2, 76, 187);
+  border: 2px white solid;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: rgb(9, 255, 255);
+}
+
+.hidden {
+  display: none;
 }
