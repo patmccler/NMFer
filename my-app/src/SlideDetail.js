@@ -5,16 +5,12 @@ import React from "react";
 const SlideDetail = props => {
   let slideDetailsToDisplay = [];
 
-  if (props.slide) {
-    for (let prop in props.slide) {
+  if (props) {
+    for (let prop in props) {
       slideDetailsToDisplay.push(
         <li key={prop} className="slide-detail-item">
           <label>{prop + ": "}</label>
-          <input
-            readOnly
-            type="text"
-            value={JSON.stringify(props.slide[prop])}
-          />
+          <input readOnly type="text" value={JSON.stringify(props[prop])} />
         </li>
       );
     }
@@ -24,7 +20,7 @@ const SlideDetail = props => {
   return (
     <div className="slide-viewer-detail">
       <div className="slide-viewer-detail-header">
-        Slide Details for slide {props.slide.index + 1} <br />
+        Slide Details for slide {props.index + 1} <br />
       </div>
       <ul>{slideDetailsToDisplay}</ul>
     </div>

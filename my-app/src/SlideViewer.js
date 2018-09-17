@@ -24,7 +24,7 @@ const SlideViewer = props => {
 
   return (
     <div className="slide-viewer">
-      <SlideDetail slide={slide} />
+      <SlideDetail {...slide} />
       <LargeView {...largeViewProps} />
     </div>
   );
