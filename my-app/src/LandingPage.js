@@ -20,7 +20,7 @@ var FilePicker = props => {
         {props.chosenFile ? props.chosenFile : "Choose an NMF"}
       </label>
       <button
-        className={"loadButton" + (props.chosenFile ? "" : " hidden")}
+        className={"loadButton" + (props.chosenFile ? "" : " hide")}
         onClick={props.handleFileClick}
       >
         Load!
