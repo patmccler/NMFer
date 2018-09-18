@@ -23,12 +23,10 @@ const SlideDetail = props => {
         Slide Details for slide {props.index + 1} <br />
       </div>
       <div className="slide-detail-items">
-        <SlideRequiredFields {...props} />
-        <SlideVideoOptions {...props} />
-        <SlideOptionalFields {...props} />
-        <div className="slide-detail-section">
-          <SlideDetailItem label="TEST 1" value="test 1" />
-        </div>
+        <RequiredFields {...props} />
+        <VideoFields {...props} />
+        <OptionalFields {...props} />
+        <LinkFields {...props} />
       </div>
     </div>
   );
@@ -36,18 +34,31 @@ const SlideDetail = props => {
 
 export default SlideDetail;
 
-const SlideOptionalFields = props => {
+const RequiredFields = props => {
   return (
-    <div className="slide-detail-section optional-fields">
-      <SlideDetailItem label="Next Slide:" value={props.next_slide} />
-      <SlideDetailItem label="Previous Slide:" value={props.prev_slide} />
+    <div className="slide-detail-section required-fields">
+      <SlideDetailItem label="File Name:" value={props.content_file_name} />
+      <SlideDetailItem label="Slide Type:" value={props.slide_type} />
     </div>
   );
 };
 
-const SlideVideoOptions = props => {
+//Eventually will only want to show these if they are used,
+//and when adding new fields give a list of possible options
+const OptionalFields = props => {
+  return (
+    <div className="slide-detail-section optional-fields">
+      <SlideDetailItem label="Slide ID: " value={props.id} />
+      <SlideDetailItem label="Next Slide:" value={props.next_slide} />
+      <SlideDetailItem label="Previous Slide:" value={props.prev_slide} />
+      <SlideDetailItem label="Transition: " value={props.next_transition} />
+    </div>
+  );
+};
+
+const VideoFields = props => {
   return props.slide_type === "video" ? (
-    <div className="slide-detail-section video options">
+    <div className="slide-detail-section video-fields">
       <SlideDetailItem label="Repeats?: " value={props.repeats} />
       <SlideDetailItem
         label="Repeats from: "
@@ -57,15 +68,16 @@ const SlideVideoOptions = props => {
   ) : null;
 };
 
-const SlideRequiredFields = props => {
-  return (
-    <div className="slide-detail-section required-fields">
-      <SlideDetailItem label="File Name:" value={props.content_file_name} />
-      <SlideDetailItem label="Slide Type:" value={props.slide_type} />
+const LinkFields = props => {
+  return props.links ? (
+    <div className="slide-detail-section link-fields">
+      <SlideDetailItem label="Links" value={"TEST"} />
     </div>
-  );
+  ) : null;
 };
 
+//default way to display an option and its value
+//not the best look but this is probably how to organize it
 const SlideDetailItem = props => {
   return (
     <div className="slide-detail-item">
@@ -73,7 +85,7 @@ const SlideDetailItem = props => {
       <input
         readOnly
         type="text"
-        value={props.value ? JSON.stringify(props.value) : "Unset"}
+        value={props.value ? JSON.stringify(props.value) : "Unset/Default"}
       />
     </div>
   );
