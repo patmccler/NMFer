@@ -71,9 +71,26 @@ const VideoFields = props => {
 const LinkFields = props => {
   return props.links ? (
     <div className="slide-detail-section link-fields">
-      <SlideDetailItem label="Links" value={"TEST"} />
+      {props.links.map(link => (
+        <Link {...link} />
+      ))}
     </div>
   ) : null;
+};
+
+//todo update once I have a better understanding
+//labels could be more descriptive
+//maybe do mouseover with better info
+const Link = props => {
+  return (
+    <div class="detail-link">
+      <SlideDetailItem label="Link to Slide: " value={props.link_to_id} />
+      <SlideDetailItem label="X value: " value={props.x} />
+      <SlideDetailItem label="Y value: " value={props.y} />
+      <SlideDetailItem label="Width : " value={props.width} />
+      <SlideDetailItem label="height: " value={props.width} />
+    </div>
+  );
 };
 
 //default way to display an option and its value
