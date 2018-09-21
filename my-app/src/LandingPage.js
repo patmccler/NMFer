@@ -30,7 +30,6 @@ var FilePicker = props => {
 };
 
 var ProgressBar = props => {
-  let progress = props.progressPercent;
   return (
     <div className="slide-viewer progress-section">
       <div className="loaded-files-label">

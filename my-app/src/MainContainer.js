@@ -164,7 +164,6 @@ const buildSlides = function buildSlides(slides, content) {
   }
   //for a more typical NMF where files are pointed at by content_file_name
   let displayableSlides = slides.map(slide => {
-    let slideContent = content[slide.content_file_name];
     let displayableSlide = Object.assign({}, slide);
     displayableSlide.source_path = URL.createObjectURL(
       content[slide.content_file_name]

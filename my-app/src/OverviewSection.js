@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import SlideThumb from "./SlideThumb.js";
+import React from "react";
 import ChapterContainer from "./ChapterContainer.js";
 
 const OverviewSection = props => {

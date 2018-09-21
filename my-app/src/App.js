@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import MainContainer from "./MainContainer.js";
 import "./App.css";
 

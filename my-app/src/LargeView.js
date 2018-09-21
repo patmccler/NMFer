@@ -12,7 +12,7 @@ const LargeView = props => {
         {"<"}
       </button>
 
-      {props.type == "image" ? (
+      {props.type === "image" ? (
         <ImageView source={props.source} />
       ) : (
         <VideoView source={props.source} />
