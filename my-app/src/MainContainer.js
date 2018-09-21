@@ -111,10 +111,10 @@ class MainContainer extends Component {
   }
 
   checkFilesReady(counter, callBack) {
-    if ((this.state.totalFiles = -1)) {
+    if (this.state.totalFiles === -1) {
       this.setState({ totalFiles: counter.totalFiles });
     }
-    if (this.state.filesLoaded != counter.filesLoaded) {
+    if (this.state.filesLoaded !== counter.filesLoaded) {
       this.setState({ filesLoaded: counter.filesLoaded });
     }
 
@@ -139,7 +139,6 @@ const readJSONOnlyFile = function readFile(file, successCallBack) {
   var fr = new FileReader();
 
   fr.onload = e => {
-    var file = fr.result;
     successCallBack(JSON.parse(fr.result));
   };
 

@@ -24,7 +24,7 @@ const SlideViewer = props => {
 
   return (
     <div className="slide-viewer">
-      <SlideDetail {...slide} />
+      <SlideDetail requestSlideChange={props.buttonOnClick} {...slide} />
       <LargeView {...largeViewProps} />
     </div>
   );

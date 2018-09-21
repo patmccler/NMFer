@@ -19,7 +19,7 @@ const SlideDetail = props => {
   }
   return (
     <div className="slide-viewer-detail">
-      <div className="slide-viewer-detail-header">
+      <div className="slide-detail-header">
         Slide Details for slide {props.index + 1} <br />
       </div>
       <div className="slide-detail-items">
@@ -37,6 +37,7 @@ export default SlideDetail;
 const RequiredFields = props => {
   return (
     <div className="slide-detail-section required-fields">
+      <div className="slide-detail-header">Required Fields:</div>
       <SlideDetailItem label="File Name:" value={props.content_file_name} />
       <SlideDetailItem label="Slide Type:" value={props.slide_type} />
     </div>
@@ -48,9 +49,22 @@ const RequiredFields = props => {
 const OptionalFields = props => {
   return (
     <div className="slide-detail-section optional-fields">
+      <div className="slide-detail-header">Optional Fields:</div>
       <SlideDetailItem label="Slide ID: " value={props.id} />
       <SlideDetailItem label="Next Slide:" value={props.next_slide} />
+      {props.next_slide ? (
+        <ChangeSlideButton
+          nextSlide={props.next_slide}
+          requestSlideChange={props.requestSlideChange}
+        />
+      ) : null}
       <SlideDetailItem label="Previous Slide:" value={props.prev_slide} />
+      {props.prev_slide ? (
+        <ChangeSlideButton
+          nextSlide={props.prev_slide}
+          requestSlideChange={props.requestSlideChange}
+        />
+      ) : null}
       <SlideDetailItem label="Transition: " value={props.next_transition} />
     </div>
   );
@@ -59,6 +73,7 @@ const OptionalFields = props => {
 const VideoFields = props => {
   return props.slide_type === "video" ? (
     <div className="slide-detail-section video-fields">
+      <div className="slide-detail-header">Video Fields:</div>
       <SlideDetailItem label="Repeats?: " value={props.repeats} />
       <SlideDetailItem
         label="Repeats from: "
@@ -71,8 +86,13 @@ const VideoFields = props => {
 const LinkFields = props => {
   return props.links ? (
     <div className="slide-detail-section link-fields">
+      <div className="slide-detail-header">Link Fields:</div>
       {props.links.map(link => (
-        <Link {...link} />
+        <Link
+          key={link.link_to_id + link.x}
+          requestSlideChange={props.requestSlideChange}
+          {...link}
+        />
       ))}
     </div>
   ) : null;
@@ -81,15 +101,30 @@ const LinkFields = props => {
 //todo update once I have a better understanding
 //labels could be more descriptive
 //maybe do mouseover with better info
+// <button onClick={() => props.handleLinkClick(props.link_to_id)}>
+// Go To Slide
+// </button>
 const Link = props => {
   return (
-    <div class="detail-link">
+    <div className="detail-link">
       <SlideDetailItem label="Link to Slide: " value={props.link_to_id} />
+      <ChangeSlideButton
+        nextSlide={props.link_to_id}
+        requestSlideChange={props.requestSlideChange}
+      />
       <SlideDetailItem label="X value: " value={props.x} />
       <SlideDetailItem label="Y value: " value={props.y} />
       <SlideDetailItem label="Width : " value={props.width} />
       <SlideDetailItem label="height: " value={props.width} />
     </div>
+  );
+};
+
+const ChangeSlideButton = props => {
+  return (
+    <button onClick={() => props.requestSlideChange(props.nextSlide)}>
+      Go To Slide
+    </button>
   );
 };
 
@@ -102,7 +137,7 @@ const SlideDetailItem = props => {
       <input
         readOnly
         type="text"
-        value={props.value ? JSON.stringify(props.value) : "Unset/Default"}
+        value={props.value ? props.value : "Unset/Default"}
       />
     </div>
   );
