@@ -122,7 +122,10 @@ const Link = props => {
 
 const ChangeSlideButton = props => {
   return (
-    <button onClick={() => props.requestSlideChange(props.nextSlide)}>
+    <button
+      className="change-slide-button"
+      onClick={() => props.requestSlideChange(props.nextSlide)}
+    >
       Go To Slide
     </button>
   );

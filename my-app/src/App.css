@@ -137,7 +137,7 @@ body * {
   display: flex;
   justify-content: flex-start;
   align-content: flex-start;
-  background: rgb(104, 104, 104);
+  background: rgb(194, 194, 194);
 }
 
 .tall .slide-detail-section {
@@ -157,10 +157,19 @@ body * {
   margin-left: 3px;
 }
 
-.slide-detail-item > input {
+.slide-detail-item > input,
+.change-slide-button {
   width: 75%;
   align-self: center;
   background: rgb(148, 204, 250);
+}
+
+.change-slide-button {
+  background: rgb(255, 255, 255);
+}
+
+.detail-link {
+  border-bottom: 2px solid;
 }
 
 /* Overview Section---------------------------------------*/
