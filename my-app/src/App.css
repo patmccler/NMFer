@@ -97,6 +97,12 @@ body * {
   overflow: auto;
 }
 
+.wide .slide-viewer-detail.minimized {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .wide .slide-viewer-detail,
 .slide-viewer-detail > .slide-detail-items {
   flex-direction: column;
@@ -119,6 +125,7 @@ body * {
 
 .slide-detail-header {
   background: rgb(52, 109, 165);
+  width: 100%;
   color: white;
 }
 

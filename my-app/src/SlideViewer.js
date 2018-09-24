@@ -1,5 +1,5 @@
 import React from "react";
-import SlideDetail from "./SlideDetail.js";
+import SlideDetailContainer from "./SlideDetailContainer.js";
 import LargeView from "./LargeView.js";
 
 //TODO: maybe use state here to manage updating with a new slide
@@ -24,7 +24,10 @@ const SlideViewer = props => {
 
   return (
     <div className="slide-viewer">
-      <SlideDetail requestSlideChange={props.buttonOnClick} {...slide} />
+      <SlideDetailContainer
+        requestSlideChange={props.buttonOnClick}
+        slide={slide}
+      />
       <LargeView {...largeViewProps} />
     </div>
   );

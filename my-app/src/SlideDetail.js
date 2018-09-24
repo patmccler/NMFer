@@ -5,23 +5,15 @@ import React from "react";
 const SlideDetail = props => {
   let slideDetailsToDisplay = [];
 
-  if (props) {
-    for (let prop in props) {
-      slideDetailsToDisplay.push(
-        <li key={prop} className="slide-detail-item">
-          <label>{prop + ": "}</label>
-          <input readOnly type="text" value={JSON.stringify(props[prop])} />
-        </li>
-      );
-    }
-  } else {
-    slideDetailsToDisplay = [<li>No Slide Info </li>];
-  }
   return (
-    <div className="slide-viewer-detail">
-      <div className="slide-detail-header">
-        Slide Details for slide {props.index + 1} <br />
-      </div>
+    <div
+      className={`slide-viewer-detail${
+        props.minimized ? " minimized" : " maximized"
+      }`}
+    >
+      <button onClick={props.handleToggle} className="slide-detail-header">
+        Slide Details for slide {props.index + 1}
+      </button>
       <div className="slide-detail-items">
         <RequiredFields {...props} />
         <VideoFields {...props} />

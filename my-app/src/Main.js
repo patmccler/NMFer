@@ -42,15 +42,13 @@ class Main extends Component {
       slideIndex = this.findSlideIndexFromID(nextSlide);
     }
 
-    //if sl
+    //if slides to go to is not in valid range
     if (slideIndex >= this.props.slides.length || slideIndex < 0) {
       return;
     }
     this.setState({
       selectedSlideIndex: slideIndex
     });
-
-    // let slides = this.state.slides;
   }
 
   /**
