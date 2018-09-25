@@ -97,10 +97,22 @@ body * {
   overflow: auto;
 }
 
+.minimized .detail-hidable {
+  display: none;
+}
+
 .wide .slide-viewer-detail.minimized {
-  position: absolute;
-  top: 0;
-  right: 0;
+  overflow: hidden;
+  width: 5%;
+}
+
+.tall .minimized {
+  width: 10%;
+  height: 5%;
+}
+
+.tall .minimized button {
+  height: 100%;
 }
 
 .wide .slide-viewer-detail,

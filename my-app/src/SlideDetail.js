@@ -12,9 +12,10 @@ const SlideDetail = props => {
       }`}
     >
       <button onClick={props.handleToggle} className="slide-detail-header">
-        Slide Details for slide {props.index + 1}
+        Slide Details{" "}
+        <span className="detail-hidable">for slide {props.index + 1}</span>
       </button>
-      <div className="slide-detail-items">
+      <div className="slide-detail-items detail-hidable">
         <RequiredFields {...props} />
         <VideoFields {...props} />
         <OptionalFields {...props} />
