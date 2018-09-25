@@ -24,7 +24,7 @@ class ChapterContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      prevProps.chapterWithSelectedSlide != this.props.chapterWithSelectedSlide
+      prevProps.chapterWithSelectedSlide !== this.props.chapterWithSelectedSlide
     ) {
       this.setState((prevState, props) => {
         let chapterHideState = prevState.chapterHideState;
@@ -34,7 +34,7 @@ class ChapterContainer extends Component {
       });
     }
 
-    if (prevProps.selectedSlide != this.props.selectedSlide) {
+    if (prevProps.selectedSlide !== this.props.selectedSlide) {
       this.forceUpdate(this.scrollActiveSlide);
     }
   }

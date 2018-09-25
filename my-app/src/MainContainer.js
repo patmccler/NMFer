@@ -111,10 +111,10 @@ class MainContainer extends Component {
   }
 
   checkFilesReady(counter, callBack) {
-    if ((this.state.totalFiles = -1)) {
+    if (this.state.totalFiles === -1) {
       this.setState({ totalFiles: counter.totalFiles });
     }
-    if (this.state.filesLoaded != counter.filesLoaded) {
+    if (this.state.filesLoaded !== counter.filesLoaded) {
       this.setState({ filesLoaded: counter.filesLoaded });
     }
 
@@ -139,7 +139,6 @@ const readJSONOnlyFile = function readFile(file, successCallBack) {
   var fr = new FileReader();
 
   fr.onload = e => {
-    var file = fr.result;
     successCallBack(JSON.parse(fr.result));
   };
 
@@ -165,7 +164,6 @@ const buildSlides = function buildSlides(slides, content) {
   }
   //for a more typical NMF where files are pointed at by content_file_name
   let displayableSlides = slides.map(slide => {
-    let slideContent = content[slide.content_file_name];
     let displayableSlide = Object.assign({}, slide);
     displayableSlide.source_path = URL.createObjectURL(
       content[slide.content_file_name]

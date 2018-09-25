@@ -20,7 +20,7 @@ var FilePicker = props => {
         {props.chosenFile ? props.chosenFile : "Choose an NMF"}
       </label>
       <button
-        className={"loadButton" + (props.chosenFile ? "" : " hidden")}
+        className={"loadButton" + (props.chosenFile ? "" : " hide")}
         onClick={props.handleFileClick}
       >
         Load!
@@ -30,7 +30,6 @@ var FilePicker = props => {
 };
 
 var ProgressBar = props => {
-  let progress = props.progressPercent;
   return (
     <div className="slide-viewer progress-section">
       <div className="loaded-files-label">

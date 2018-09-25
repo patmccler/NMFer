@@ -11,7 +11,7 @@ const SlideThumb = props => {
     case "image":
       let imgProps = buildImageProps(props);
       if (ref) imgProps.ref = ref;
-      elementToReturn = <img {...imgProps} />;
+      elementToReturn = <img alt="" {...imgProps} />;
 
       break;
     case "video":

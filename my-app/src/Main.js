@@ -5,7 +5,6 @@ import SlideViewer from "./SlideViewer.js";
 class Main extends Component {
   constructor(props) {
     super(props);
-    let selectedSlide = props.slides ? props.slides[props.initialSlide] : null;
     this.state = {
       selectedSlideIndex: props.initialSlide
     };
@@ -34,21 +33,22 @@ class Main extends Component {
   handleSlideChangeClick(nextSlide) {
     let slideIndex = -1;
     //confirm that nextSlide is an int
-    if (typeof nextSlide == "number" && nextSlide == parseInt(nextSlide)) {
+    if (
+      typeof nextSlide === "number" &&
+      nextSlide === parseInt(nextSlide, 10)
+    ) {
       slideIndex = nextSlide;
-    } else if (typeof nextSlide == "string") {
+    } else if (typeof nextSlide === "string") {
       slideIndex = this.findSlideIndexFromID(nextSlide);
     }
 
-    //if sl
+    //if slides to go to is not in valid range
     if (slideIndex >= this.props.slides.length || slideIndex < 0) {
       return;
     }
     this.setState({
       selectedSlideIndex: slideIndex
     });
-
-    // let slides = this.state.slides;
   }
 
   /**

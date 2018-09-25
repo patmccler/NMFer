@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import SlideThumb from "./SlideThumb.js";
 
 const Chapter = props => {
@@ -6,7 +6,7 @@ const Chapter = props => {
 
   if (props.slides) {
     //TODO use separate renderslide method
-    props.slides.map(slide => {
+    props.slides.forEach(slide => {
       let index = slide.index;
       let selected = props.selectedSlide === index;
 
