@@ -43,6 +43,9 @@ const OptionalFields = props => {
   return (
     <div className="slide-detail-section optional-fields">
       <div className="slide-detail-header">Optional Fields:</div>
+      {props.chapter_title ? (
+        <SlideDetailItem label="Chapter Title: " value={props.chapter_title} />
+      ) : null}
       <SlideDetailItem label="Slide ID: " value={props.id} />
       <SlideDetailItem label="Next Slide:" value={props.next_slide} />
       {props.next_slide ? (
