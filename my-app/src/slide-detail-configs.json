@@ -1,0 +1,27 @@
+{
+  "slide": {
+    "required": {
+      "content_file_name": "string",
+      "slide_type": ["image", "video"]
+    },
+    "optional": {
+      "chapter_title": "string",
+      "id": "unique_string",
+      "next_slide": "string",
+      "prev_slide": "string",
+      "transition": "",
+      "repeats": ["true", "false"],
+      "repeats_from_seconds": "integer",
+      "links": "array",
+      "next_transition": ["dissolve", "default"]
+    }
+  },
+
+  "link": {
+    "link_to_id": "string",
+    "x": "integer",
+    "y": "integer",
+    "width": "integer",
+    "height": "integer"
+  }
+}
