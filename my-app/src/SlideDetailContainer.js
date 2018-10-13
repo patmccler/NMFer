@@ -32,7 +32,7 @@ class SlideDetailContainer extends Component {
 }
 
 SlideDetailContainer.defaultProps = {
-  detailsMinimized: false
+  detailsMinimized: true
 };
 
 export default SlideDetailContainer;
