@@ -84,7 +84,7 @@ class MainContainer extends Component {
       entries.forEach(entry => {
         let fileName = entry.filename;
 
-        if (fileName.includes("manifest.json")) {
+        if (fileName === "manifest.json") {
           entry.getData(new window.zip.TextWriter(), file => {
             loadCounter.filesLoaded++;
             slides = JSON.parse(file).slides;
@@ -165,9 +165,14 @@ const buildSlides = function buildSlides(slides, content) {
   //for a more typical NMF where files are pointed at by content_file_name
   let displayableSlides = slides.map(slide => {
     let displayableSlide = Object.assign({}, slide);
-    displayableSlide.source_path = URL.createObjectURL(
-      content[slide.content_file_name]
-    );
+    try {
+      displayableSlide.source_path = URL.createObjectURL(
+        content[slide.content_file_name]
+      );
+    } catch (e) {
+      displayableSlide.source_path = "oops";
+      console.log("ISSUE: " + slide.content_file_name);
+    }
     return displayableSlide;
   });
 
