@@ -21,12 +21,14 @@ class SlideDetailContainer extends Component {
 
   render() {
     return (
-      <SlideDetail
-        handleToggle={this.handleSlideDetailToggle}
-        minimized={this.state.detailsMinimized}
-        {...this.props.slide}
-        requestSlideChange={this.props.requestSlideChange}
-      />
+      <div className="control-panel">
+        <SlideDetail
+          handleToggle={this.handleSlideDetailToggle}
+          minimized={this.state.detailsMinimized}
+          {...this.props.slide}
+          requestSlideChange={this.props.requestSlideChange}
+        />
+      </div>
     );
   }
 }
